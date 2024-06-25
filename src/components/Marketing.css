@@ -1,0 +1,27 @@
+@keyframes rainbow {
+    0% { background-position: 0% 50% }
+    50% { background-position: 100% 50% }
+    100% { background-position: 0% 50% }
+}
+
+.rainbow-text-animation {
+    background: linear-gradient(90deg, #ff8080, #ffa366, #ffcc99, #99ff99, #99ccff, #cc99ff, #e6ccff);
+    background-size: 600% 100%;
+    animation: rainbow 8s linear infinite;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.glow-shadow {
+    animation: glow 1.5s infinite alternate;
+  }
+  
+  @keyframes glow {
+    from {
+      box-shadow: none;
+    }
+    to {
+      box-shadow: 7px 7px 15px rgba(0, 195, 255, 0.7);
+    }
+  }
+  
