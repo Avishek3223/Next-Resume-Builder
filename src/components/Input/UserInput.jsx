@@ -1,11 +1,54 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import { FaPlus, FaMinus, FaUser, FaBriefcase, FaGraduationCap, FaProjectDiagram, FaTasks, FaToolbox, FaCertificate, FaAward, FaHandsHelping, FaBook, FaUsers, FaHeart, FaLink, FaLanguage, FaChalkboardTeacher, FaBookOpen, FaLightbulb, FaRocket } from 'react-icons/fa';
 import InputComponent from './InputComponent';
 import GithubIcon from '../../utils/GithubIcon.svg';
 import { UserDataContext } from '@/context/UserDataContext';
-// import Section from '../AllSections/Section';
+import './UserInput.css';
 
 const UserInput = () => {
     const { userData, updateUserData } = useContext(UserDataContext);
+    const [visibleSections, setVisibleSections] = useState({
+        basics: false,
+        profiles: false,
+        workExperience: false,
+        education: false,
+        academyProjects: false,
+        positionsOfResponsibility: false,
+        skills: false,
+        certifications: false,
+        awards: false,
+        volunteerExperiences: false,
+        publications: false,
+        affiliations: false,
+        hobbies: false,
+        portfolioLinks: false,
+        languages: false,
+        workshops: false,
+        courses: false,
+        patents: false,
+        endeavors: false,
+    });
+
+    const [sectionData, setSectionData] = useState({
+        profiles: [{ platform: '', link: '' }],
+        workExperience: [{ company: '', position: '', duration: '' }],
+        education: [{ institution: '', degree: '', year: '' }],
+        academyProjects: [{ title: '', description: '' }],
+        positionsOfResponsibility: [{ title: '', description: '' }],
+        skills: [{ name: '', level: '' }],
+        certifications: [{ name: '', issuer: '' }],
+        awards: [{ name: '', issuer: '' }],
+        volunteerExperiences: [{ organization: '', role: '' }],
+        publications: [{ title: '', journal: '' }],
+        affiliations: [{ organization: '', role: '' }],
+        hobbies: [{ name: '' }],
+        portfolioLinks: [{ platform: '', link: '' }],
+        languages: [{ language: '', level: '' }],
+        workshops: [{ title: '', organizer: '' }],
+        courses: [{ title: '', provider: '' }],
+        patents: [{ title: '', description: '' }],
+        endeavors: [{ title: '', description: '' }],
+    });
 
     let name = '';
     let emailId = '';
@@ -20,44 +63,120 @@ const UserInput = () => {
         updateUserData(updatedUserData);
     };
 
-    return (
-        <div className='w-[33rem] border-2 bg-[#ffffff] shadow-lg p-5 overflow-y-scroll max-h-screen scrollbar-hide'>
-            <div>
-                <div className="flex items-center gap-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray" className="w-5 h-5">
-                        <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
-                    </svg>
-                    <div className='text-[1.5rem] text-[#000000]'>Basics</div>
-                </div>
-                <div>
-                    <div className="flex flex-col gap-4 mt-6">
-                        <div className="flex gap-8 items-center">
-                            <label className="cursor-pointer flex text-black text-[1.2rem] rounded-full font-semibold flex-col justify-center items-center ml-8 w-[6rem] h-[6rem] bg-[#adadad]" style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', backdropFilter: 'blur(5px)' }}>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="w-[4rem] h-[3rem]">
-                                    <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
-                                </svg>
-                                <input type="file" className="hidden" />
-                            </label>
+    const toggleSectionVisibility = (section) => {
+        setVisibleSections((prevState) => ({
+            ...prevState,
+            [section]: !prevState[section],
+        }));
+    };
 
-                            <InputComponent label="Full Name *" />
+    const handleAddEntry = (section) => {
+        setSectionData((prevState) => ({
+            ...prevState,
+            [section]: [...prevState[section], {}],
+        }));
+    };
+
+    const handleRemoveEntry = (section, index) => {
+        setSectionData((prevState) => ({
+            ...prevState,
+            [section]: prevState[section].filter((_, i) => i !== index),
+        }));
+    };
+
+    const handleSectionDataChange = (section, index, field, value) => {
+        const newSectionData = [...sectionData[section]];
+        newSectionData[index][field] = value;
+        setSectionData((prevState) => ({
+            ...prevState,
+            [section]: newSectionData,
+        }));
+    };
+
+    const icons = {
+        basics: <FaUser />,
+        profiles: <GithubIcon />,
+        workExperience: <FaBriefcase />,
+        education: <FaGraduationCap />,
+        academyProjects: <FaProjectDiagram />,
+        positionsOfResponsibility: <FaTasks />,
+        skills: <FaToolbox />,
+        certifications: <FaCertificate />,
+        awards: <FaAward />,
+        volunteerExperiences: <FaHandsHelping />,
+        publications: <FaBook />,
+        affiliations: <FaUsers />,
+        hobbies: <FaHeart />,
+        portfolioLinks: <FaLink />,
+        languages: <FaLanguage />,
+        workshops: <FaChalkboardTeacher />,
+        courses: <FaBookOpen />,
+        patents: <FaLightbulb />,
+        endeavors: <FaRocket />,
+    };
+
+    return (
+        <div className='w-[33rem] h-[92vh] border-2 bg-[#ffffff] shadow-lg p-5 overflow-y-scroll max-h-screen scrollbar-hide'>
+            <div>
+                {Object.keys(visibleSections).map((section) => (
+                    <div key={section}>
+                        <div className="flex items-center justify-between mt-4">
+                            <div className="flex items-center gap-4">
+                                <div className='text-[1.2rem] text-[#000000] opacity-[0.6]'>{icons[section]}</div>
+                                <div className='text-[1.2rem] text-[#000000] capitalize'>{section.replace(/([A-Z])/g, ' $1')}</div>
+                            </div>
+                            <button onClick={() => toggleSectionVisibility(section)}>
+                                {visibleSections[section] ? <FaMinus /> : <FaPlus />}
+                            </button>
                         </div>
-                        <InputComponent width={100} label="Email *" />
-                        <div className="flex w-[100%] gap-2">
-                            <InputComponent width={100} className='w-full' label="Phone Number *" />
-                            <InputComponent label="Profession *" />
-                        </div>
-                        <div className='border-b border-[#c2c2c2]'></div>
-                        <textarea placeholder="Summary" className='h-[15rem] border border-[#929292] rounded-[6px] outline-none p-4'></textarea>
+                        {visibleSections[section] && (
+                            <div className="flex flex-col gap-4 mt-6">
+                                {section === 'basics' ? (
+                                    <div className="flex flex-col gap-4">
+                                        <div className="flex gap-8 items-center">
+                                            <label className="cursor-pointer flex text-black text-[1.2rem] rounded-full font-semibold flex-col justify-center items-center w-[6rem] h-[6rem] bg-[#adadad]" style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', backdropFilter: 'blur(5px)' }}>
+                                                <FaUser size="2rem" color="white" />
+                                                <input type="file" className="hidden" />
+                                            </label>
+                                            <InputComponent label="Full Name *" />
+                                        </div>
+                                        <InputComponent width={100} label="Email *" />
+                                        <div className="flex w-[100%] gap-2">
+                                            <InputComponent width={100} className='w-full' label="Phone Number *" />
+                                            <InputComponent label="Profession *" />
+                                        </div>
+                                        <div className='border-b border-[#c2c2c2]'></div>
+                                        <textarea placeholder="Summary" className='h-[12rem] text-[1rem] border border-[#929292] rounded-[6px] outline-none p-4'></textarea>
+                                    </div>
+                                ) : (
+                                    <>
+                                        {sectionData[section] && sectionData[section].map((entry, index) => (
+                                            <div key={index} className="flex flex-col gap-4 border-b border-[#c2c2c2] pb-4 mb-4">
+                                                <InputComponent
+                                                    label={`${section.replace(/([A-Z])/g, ' $1')} details`}
+                                                    value={entry.details || ''}
+                                                    onChange={(e) => handleSectionDataChange(section, index, 'details', e.target.value)}
+                                                />
+                                                <button
+                                                    onClick={() => handleRemoveEntry(section, index)}
+                                                    className="self-end text-red-500 hover:text-red-700 transition duration-200"
+                                                >
+                                                    <FaMinus /> Remove
+                                                </button>
+                                            </div>
+                                        ))}
+                                        <button
+                                            onClick={() => handleAddEntry(section)}
+                                            className="self-start text-green-500 hover:text-green-700 transition duration-200"
+                                        >
+                                            <FaPlus /> Add Another {section.replace(/([A-Z])/g, ' $1')}
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        )}
                     </div>
-                </div>
-                <div className='border-b border-[#c2c2c2] mt-4'></div>
-                <div className="flex mt-4 gap-4">
-                    <div className='opacity-[0.6]'>
-                        <GithubIcon />
-                    </div>
-                    <div className='text-[1.5rem] text-[#000000]'>Profiles</div>
-                </div>
-                {/* <Section /> */}
+                ))}
             </div>
             <button onClick={() => handleUpdate({ name, emailId })}>Done</button>
         </div>

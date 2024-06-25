@@ -1,0 +1,23 @@
+/* WebKit browsers */
+.scrollbar-hide {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #dbdbdb transparent; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    width: 1px; /* Change this value to make the scrollbar narrower or wider */
+    height: 8px; /* Change this value to make the scrollbar narrower or wider */
+}
+
+.scrollbar-hide::-webkit-scrollbar-thumb {
+    background: #ccc; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Roundness of the scrollbar thumb */
+}
+
+.scrollbar-hide::-webkit-scrollbar-thumb:hover {
+    background: #c2c2c2; /* Color of the scrollbar thumb when hovered */
+}
+
+.scrollbar-hide::-webkit-scrollbar-track {
+    background: transparent; /* Color of the scrollbar track */
+}
