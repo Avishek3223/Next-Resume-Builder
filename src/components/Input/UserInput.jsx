@@ -1,18 +1,35 @@
 import React, { useContext, useState } from 'react';
-import { FaPlus, FaMinus, FaUser, FaBriefcase, FaGraduationCap, FaProjectDiagram, FaTasks, FaToolbox, FaCertificate, FaAward, FaHandsHelping, FaBook, FaUsers, FaHeart, FaLink, FaLanguage, FaChalkboardTeacher, FaBookOpen, FaLightbulb, FaRocket } from 'react-icons/fa';
-import InputComponent from './InputComponent';
-import GithubIcon from '../../utils/GithubIcon.svg';
+import { FaPlus, FaMinus } from 'react-icons/fa';
 import { UserDataContext } from '@/context/UserDataContext';
+import BasicsSection from './sections/BasicsSection';
+import ProfilesSection from './sections/ProfilesSection';
+import WorkExperienceSection from './sections/WorkExperienceSection';
+import EducationSection from './sections/EducationSection';
+import PositionsOfResponsibilitySection from './sections/PositionsOfResponsibilitySection';
+import SkillsSection from './sections/SkillsSection';
+import CertificationsSection from './sections/CertificationsSection';
+import AwardsSection from './sections/AwardsSection';
+import VolunteerExperiencesSection from './sections/VolunteerExperiencesSection';
+import PublicationsSection from './sections/PublicationsSection';
+import AffiliationsSection from './sections/AffiliationsSection';
+import HobbiesSection from './sections/HobbiesSection';
+import PortfolioLinksSection from './sections/PortfolioLinksSection';
+import LanguagesSection from './sections/LanguagesSection';
+import WorkshopsSection from './sections/WorkshopsSection';
+import CoursesSection from './sections/CoursesSection';
+import PatentsSection from './sections/PatentsSection';
+import EndeavorsSection from './sections/EndeavorsSection';
+import ProjectsSection from './sections/ProjectsSection';
 import './UserInput.css';
 
 const UserInput = () => {
     const { userData, updateUserData } = useContext(UserDataContext);
     const [visibleSections, setVisibleSections] = useState({
-        basics: false,
+        basics: true,
         profiles: false,
         workExperience: false,
         education: false,
-        academyProjects: false,
+        projects: false,
         positionsOfResponsibility: false,
         skills: false,
         certifications: false,
@@ -30,36 +47,29 @@ const UserInput = () => {
     });
 
     const [sectionData, setSectionData] = useState({
+        basics: {},
         profiles: [{ platform: '', link: '' }],
-        workExperience: [{ company: '', position: '', duration: '' }],
+        workExperience: [{ company: '', region: '', startDate: '', endDate: '', position: '', description: '', technologies: '' }],
         education: [{ institution: '', degree: '', year: '' }],
-        academyProjects: [{ title: '', description: '' }],
+        projects: [{ title: '', description: '', link: '' }],
         positionsOfResponsibility: [{ title: '', description: '' }],
         skills: [{ name: '', level: '' }],
         certifications: [{ name: '', issuer: '' }],
         awards: [{ name: '', issuer: '' }],
-        volunteerExperiences: [{ organization: '', role: '' }],
-        publications: [{ title: '', journal: '' }],
+        volunteerExperiences: [{ organization: '', role: '', description: '' }],
+        publications: [{ title: '', journal: '', year: '' }],
         affiliations: [{ organization: '', role: '' }],
         hobbies: [{ name: '' }],
         portfolioLinks: [{ platform: '', link: '' }],
         languages: [{ language: '', level: '' }],
-        workshops: [{ title: '', organizer: '' }],
-        courses: [{ title: '', provider: '' }],
-        patents: [{ title: '', description: '' }],
+        workshops: [{ title: '', organizer: '', year: '' }],
+        courses: [{ title: '', provider: '', year: '' }],
+        patents: [{ title: '', description: '', year: '' }],
         endeavors: [{ title: '', description: '' }],
     });
 
-    let name = '';
-    let emailId = '';
-
-    if (userData) {
-        name = userData.displayName;
-        emailId = userData.emailId;
-    }
-
-    const handleUpdate = (updatedAttribute) => {
-        const updatedUserData = { ...userData, ...updatedAttribute };
+    const handleUpdate = () => {
+        const updatedUserData = { ...userData, ...sectionData };
         updateUserData(updatedUserData);
     };
 
@@ -93,28 +103,6 @@ const UserInput = () => {
         }));
     };
 
-    const icons = {
-        basics: <FaUser />,
-        profiles: <GithubIcon />,
-        workExperience: <FaBriefcase />,
-        education: <FaGraduationCap />,
-        academyProjects: <FaProjectDiagram />,
-        positionsOfResponsibility: <FaTasks />,
-        skills: <FaToolbox />,
-        certifications: <FaCertificate />,
-        awards: <FaAward />,
-        volunteerExperiences: <FaHandsHelping />,
-        publications: <FaBook />,
-        affiliations: <FaUsers />,
-        hobbies: <FaHeart />,
-        portfolioLinks: <FaLink />,
-        languages: <FaLanguage />,
-        workshops: <FaChalkboardTeacher />,
-        courses: <FaBookOpen />,
-        patents: <FaLightbulb />,
-        endeavors: <FaRocket />,
-    };
-
     return (
         <div className='w-[33rem] h-[92vh] border-2 bg-[#ffffff] shadow-lg p-5 overflow-y-scroll max-h-screen scrollbar-hide'>
             <div>
@@ -122,7 +110,6 @@ const UserInput = () => {
                     <div key={section}>
                         <div className="flex items-center justify-between mt-4">
                             <div className="flex items-center gap-4">
-                                <div className='text-[1.2rem] text-[#000000] opacity-[0.6]'>{icons[section]}</div>
                                 <div className='text-[1.2rem] text-[#000000] capitalize'>{section.replace(/([A-Z])/g, ' $1')}</div>
                             </div>
                             <button onClick={() => toggleSectionVisibility(section)}>
@@ -131,56 +118,161 @@ const UserInput = () => {
                         </div>
                         {visibleSections[section] && (
                             <div className="flex flex-col gap-4 mt-6">
-                                {section === 'basics' ? (
-                                    <div className="flex flex-col gap-4">
-                                        <div className="flex gap-8 items-center">
-                                            <label className="cursor-pointer flex text-black text-[1.2rem] rounded-full font-semibold flex-col justify-center items-center w-[6rem] h-[6rem] bg-[#adadad]" style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', backdropFilter: 'blur(5px)' }}>
-                                                <FaUser size="2rem" color="white" />
-                                                <input type="file" className="hidden" />
-                                            </label>
-                                            <InputComponent label="Full Name *" />
-                                        </div>
-                                        <InputComponent width={100} label="Email *" />
-                                        <div className="flex w-[100%] gap-2">
-                                            <InputComponent width={100} className='w-full' label="Phone Number *" />
-                                            <InputComponent label="Profession *" />
-                                        </div>
-                                        <div className='border-b border-[#c2c2c2]'></div>
-                                        <textarea placeholder="Summary" className='h-[12rem] text-[1rem] border border-[#929292] rounded-[6px] outline-none p-4'></textarea>
-                                    </div>
-                                ) : (
-                                    <>
-                                        {sectionData[section] && sectionData[section].map((entry, index) => (
-                                            <div key={index} className="flex flex-col gap-4 border-b border-[#c2c2c2] pb-4 mb-4">
-                                                <InputComponent
-                                                    label={`${section.replace(/([A-Z])/g, ' $1')} details`}
-                                                    value={entry.details || ''}
-                                                    onChange={(e) => handleSectionDataChange(section, index, 'details', e.target.value)}
-                                                />
-                                                <button
-                                                    onClick={() => handleRemoveEntry(section, index)}
-                                                    className="self-end text-red-500 hover:text-red-700 transition duration-200"
-                                                >
-                                                    <FaMinus /> Remove
-                                                </button>
-                                            </div>
-                                        ))}
-                                        <button
-                                            onClick={() => handleAddEntry(section)}
-                                            className="self-start text-green-500 hover:text-green-700 transition duration-200"
-                                        >
-                                            <FaPlus /> Add Another {section.replace(/([A-Z])/g, ' $1')}
-                                        </button>
-                                    </>
+                                {section === 'basics' && (
+                                    <BasicsSection data={sectionData.basics} onChange={handleSectionDataChange} />
+                                )}
+                                {section === 'profiles' && (
+                                    <ProfilesSection
+                                        data={sectionData.profiles}
+                                        onAdd={() => handleAddEntry('profiles')}
+                                        onRemove={(index) => handleRemoveEntry('profiles', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'workExperience' && (
+                                    <WorkExperienceSection
+                                        data={sectionData.workExperience}
+                                        onAdd={() => handleAddEntry('workExperience')}
+                                        onRemove={(index) => handleRemoveEntry('workExperience', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'education' && (
+                                    <EducationSection
+                                        data={sectionData.education}
+                                        onAdd={() => handleAddEntry('education')}
+                                        onRemove={(index) => handleRemoveEntry('education', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'projects' && (
+                                    <ProjectsSection
+                                        data={sectionData.projects}
+                                        onAdd={() => handleAddEntry('projects')}
+                                        onRemove={(index) => handleRemoveEntry('projects', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'positionsOfResponsibility' && (
+                                    <PositionsOfResponsibilitySection
+                                        data={sectionData.positionsOfResponsibility}
+                                        onAdd={() => handleAddEntry('positionsOfResponsibility')}
+                                        onRemove={(index) => handleRemoveEntry('positionsOfResponsibility', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'skills' && (
+                                    <SkillsSection
+                                        data={sectionData.skills}
+                                        onAdd={() => handleAddEntry('skills')}
+                                        onRemove={(index) => handleRemoveEntry('skills', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'certifications' && (
+                                    <CertificationsSection
+                                        data={sectionData.certifications}
+                                        onAdd={() => handleAddEntry('certifications')}
+                                        onRemove={(index) => handleRemoveEntry('certifications', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'awards' && (
+                                    <AwardsSection
+                                        data={sectionData.awards}
+                                        onAdd={() => handleAddEntry('awards')}
+                                        onRemove={(index) => handleRemoveEntry('awards', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'volunteerExperiences' && (
+                                    <VolunteerExperiencesSection
+                                        data={sectionData.volunteerExperiences}
+                                        onAdd={() => handleAddEntry('volunteerExperiences')}
+                                        onRemove={(index) => handleRemoveEntry('volunteerExperiences', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'publications' && (
+                                    <PublicationsSection
+                                        data={sectionData.publications}
+                                        onAdd={() => handleAddEntry('publications')}
+                                        onRemove={(index) => handleRemoveEntry('publications', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'affiliations' && (
+                                    <AffiliationsSection
+                                        data={sectionData.affiliations}
+                                        onAdd={() => handleAddEntry('affiliations')}
+                                        onRemove={(index) => handleRemoveEntry('affiliations', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'hobbies' && (
+                                    <HobbiesSection
+                                        data={sectionData.hobbies}
+                                        onAdd={() => handleAddEntry('hobbies')}
+                                        onRemove={(index) => handleRemoveEntry('hobbies', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'portfolioLinks' && (
+                                    <PortfolioLinksSection
+                                        data={sectionData.portfolioLinks}
+                                        onAdd={() => handleAddEntry('portfolioLinks')}
+                                        onRemove={(index) => handleRemoveEntry('portfolioLinks', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'languages' && (
+                                    <LanguagesSection
+                                        data={sectionData.languages}
+                                        onAdd={() => handleAddEntry('languages')}
+                                        onRemove={(index) => handleRemoveEntry('languages', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'workshops' && (
+                                    <WorkshopsSection
+                                        data={sectionData.workshops}
+                                        onAdd={() => handleAddEntry('workshops')}
+                                        onRemove={(index) => handleRemoveEntry('workshops', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'courses' && (
+                                    <CoursesSection
+                                        data={sectionData.courses}
+                                        onAdd={() => handleAddEntry('courses')}
+                                        onRemove={(index) => handleRemoveEntry('courses', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'patents' && (
+                                    <PatentsSection
+                                        data={sectionData.patents}
+                                        onAdd={() => handleAddEntry('patents')}
+                                        onRemove={(index) => handleRemoveEntry('patents', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'endeavors' && (
+                                    <EndeavorsSection
+                                        data={sectionData.endeavors}
+                                        onAdd={() => handleAddEntry('endeavors')}
+                                        onRemove={(index) => handleRemoveEntry('endeavors', index)}
+                                        onChange={handleSectionDataChange}
+                                    />
                                 )}
                             </div>
                         )}
                     </div>
                 ))}
             </div>
-            <button onClick={() => handleUpdate({ name, emailId })}>Done</button>
+            <button onClick={handleUpdate} className="mt-4 p-2 bg-blue-500 text-white rounded-lg">Done</button>
         </div>
     );
-}
+};
 
 export default UserInput;
