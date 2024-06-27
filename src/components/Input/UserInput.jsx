@@ -13,7 +13,6 @@ import VolunteerExperiencesSection from './sections/VolunteerExperiencesSection'
 import PublicationsSection from './sections/PublicationsSection';
 import AffiliationsSection from './sections/AffiliationsSection';
 import HobbiesSection from './sections/HobbiesSection';
-import PortfolioLinksSection from './sections/PortfolioLinksSection';
 import LanguagesSection from './sections/LanguagesSection';
 import WorkshopsSection from './sections/WorkshopsSection';
 import CoursesSection from './sections/CoursesSection';
@@ -38,7 +37,6 @@ const UserInput = () => {
         publications: false,
         affiliations: false,
         hobbies: false,
-        portfolioLinks: false,
         languages: false,
         workshops: false,
         courses: false,
@@ -60,7 +58,6 @@ const UserInput = () => {
         publications: [{ title: '', journal: '', year: '' }],
         affiliations: [{ organization: '', role: '' }],
         hobbies: [{ name: '' }],
-        portfolioLinks: [{ platform: '', link: '' }],
         languages: [{ language: '', level: '' }],
         workshops: [{ title: '', organizer: '', year: '' }],
         courses: [{ title: '', provider: '', year: '' }],
@@ -217,14 +214,6 @@ const UserInput = () => {
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
-                                {section === 'portfolioLinks' && (
-                                    <PortfolioLinksSection
-                                        data={sectionData.portfolioLinks}
-                                        onAdd={() => handleAddEntry('portfolioLinks')}
-                                        onRemove={(index) => handleRemoveEntry('portfolioLinks', index)}
-                                        onChange={handleSectionDataChange}
-                                    />
-                                )}
                                 {section === 'languages' && (
                                     <LanguagesSection
                                         data={sectionData.languages}
@@ -270,7 +259,6 @@ const UserInput = () => {
                     </div>
                 ))}
             </div>
-            <button onClick={handleUpdate} className="mt-4 p-2 bg-blue-500 text-white rounded-lg">Done</button>
         </div>
     );
 };

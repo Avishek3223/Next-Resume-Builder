@@ -6,7 +6,7 @@ const CoursesSection = ({ data, onAdd, onRemove, onChange }) => {
     return (
         <div className="flex flex-col gap-4">
             {data.map((entry, index) => (
-                <div key={index} className="border-b border-[#c2c2c2] pb-4 mb-4">
+                <div key={index}>
                     <InputComponent
                         label="Course"
                         value={entry.course}
@@ -19,17 +19,17 @@ const CoursesSection = ({ data, onAdd, onRemove, onChange }) => {
                     />
                     <button
                         onClick={() => onRemove('courses', index)}
-                        className="self-end text-red-500 hover:text-red-700 transition duration-200"
+                        className="w-[20%] mt-6 p-2 text-center flex justify-center items-center gap-2 bg-[#ffffff] drop-shadow text-red-500 hover:text-red-700 transition duration-200 col-span-2"
                     >
                         <FaMinus /> Remove
                     </button>
                 </div>
             ))}
             <button
-                onClick={onAdd}
-                className="self-start text-green-500 hover:text-green-700 transition duration-200"
+                onClick={() => onAdd('courses')}
+                className="w-[20%] ml-auto p-2 text-center flex justify-center items-center gap-2 bg-[#ffffff] drop-shadow text-green-500 hover:text-green-700 transition duration-200 col-span-2"
             >
-                <FaPlus /> Add Another Course
+                <FaPlus /> Add
             </button>
         </div>
     );

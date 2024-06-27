@@ -6,7 +6,7 @@ const PublicationsSection = ({ data, onAdd, onRemove, onChange }) => {
     return (
         <div className="flex flex-col gap-4">
             {data.map((entry, index) => (
-                <div key={index} className="border-b border-[#c2c2c2] pb-4 mb-4">
+                <div key={index}>
                     <InputComponent
                         label="Title"
                         value={entry.title}
@@ -21,22 +21,22 @@ const PublicationsSection = ({ data, onAdd, onRemove, onChange }) => {
                         placeholder="Summary"
                         value={entry.summary}
                         onChange={(e) => onChange('publications', index, 'summary', e.target.value)}
-                        className="border border-[#929292] rounded-[6px] p-4"
+                        className="border w-full  border-[#929292] rounded-[6px] p-4"
                         rows="4"
                     />
                     <button
                         onClick={() => onRemove('publications', index)}
-                        className="self-end text-red-500 hover:text-red-700 transition duration-200"
+                        className="w-[20%] p-2 text-center flex justify-center items-center gap-2 bg-[#ffffff] drop-shadow text-red-500 hover:text-red-700 transition duration-200 col-span-2"
                     >
                         <FaMinus /> Remove
                     </button>
                 </div>
             ))}
             <button
-                onClick={onAdd}
-                className="self-start text-green-500 hover:text-green-700 transition duration-200"
+                onClick={() => onAdd('publications')}
+                className="w-[20%] ml-auto p-2 text-center flex justify-center items-center gap-2 bg-[#ffffff] drop-shadow text-green-500 hover:text-green-700 transition duration-200 col-span-2"
             >
-                <FaPlus /> Add Another Publication
+                <FaPlus /> Add
             </button>
         </div>
     );
