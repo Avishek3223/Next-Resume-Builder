@@ -1,7 +1,8 @@
-import React, { useContext, useState } from 'react';
-import { FaPlus, FaMinus } from 'react-icons/fa';
+import React, { useContext, useState, useEffect } from 'react';
+import { FaPlus, FaMinus, FaSave } from 'react-icons/fa';
+import axios from 'axios';
 import { UserDataContext } from '@/context/UserDataContext';
-import BasicsSection from './sections/BasicsSection';
+import PersonalInfoSection from './sections/PersonalInfoSection';
 import ProfilesSection from './sections/ProfilesSection';
 import WorkExperienceSection from './sections/WorkExperienceSection';
 import EducationSection from './sections/EducationSection';
@@ -20,11 +21,13 @@ import PatentsSection from './sections/PatentsSection';
 import EndeavorsSection from './sections/EndeavorsSection';
 import ProjectsSection from './sections/ProjectsSection';
 import './UserInput.css';
+import { API_BASE_URL } from '@/config';
 
 const UserInput = () => {
-    const { userData, updateUserData } = useContext(UserDataContext);
+    const { userData, updateUserData, resumeData } = useContext(UserDataContext);
+
     const [visibleSections, setVisibleSections] = useState({
-        basics: true,
+        personalInfo: true,
         profiles: false,
         workExperience: false,
         education: false,
@@ -44,9 +47,16 @@ const UserInput = () => {
         endeavors: false,
     });
 
-    const [sectionData, setSectionData] = useState({
-        basics: {},
-        profiles: [{ platform: '', link: '' }],
+    const initialSectionData = {
+        personalInfo: {
+            name: '',
+            jobTitle: '',
+            emailId: '',
+            phone: '',
+            profilePicture: '',
+            summary: ''
+        },
+        profiles: [{ platform: '',username:"", link: '' }],
         workExperience: [{ company: '', region: '', startDate: '', endDate: '', position: '', description: '', technologies: '' }],
         education: [{ institution: '', degree: '', year: '' }],
         projects: [{ title: '', description: '', link: '' }],
@@ -63,12 +73,15 @@ const UserInput = () => {
         courses: [{ title: '', provider: '', year: '' }],
         patents: [{ title: '', description: '', year: '' }],
         endeavors: [{ title: '', description: '' }],
-    });
-
-    const handleUpdate = () => {
-        const updatedUserData = { ...userData, ...sectionData };
-        updateUserData(updatedUserData);
     };
+
+    const [sectionData, setSectionData] = useState(initialSectionData);
+
+    useEffect(() => {
+        if (resumeData) {
+            setSectionData(resumeData);
+        }
+    }, [resumeData]);
 
     const toggleSectionVisibility = (section) => {
         setVisibleSections((prevState) => ({
@@ -80,7 +93,7 @@ const UserInput = () => {
     const handleAddEntry = (section) => {
         setSectionData((prevState) => ({
             ...prevState,
-            [section]: [...prevState[section], {}],
+            [section]: [...prevState[section], { id: Date.now() }],
         }));
     };
 
@@ -92,12 +105,48 @@ const UserInput = () => {
     };
 
     const handleSectionDataChange = (section, index, field, value) => {
-        const newSectionData = [...sectionData[section]];
-        newSectionData[index][field] = value;
-        setSectionData((prevState) => ({
-            ...prevState,
-            [section]: newSectionData,
-        }));
+        if (Array.isArray(sectionData[section])) {
+            const newSectionData = [...sectionData[section]];
+            newSectionData[index][field] = value;
+            setSectionData((prevState) => ({
+                ...prevState,
+                [section]: newSectionData,
+            }));
+        } else {
+            setSectionData((prevState) => ({
+                ...prevState,
+                [section]: {
+                    ...prevState[section],
+                    [field]: value,
+                },
+            }));
+        }
+    };
+
+    const handleSave = async (section) => {
+        try {
+            console.log(`Saving section: ${section}`);
+
+            const currentUserDataResponse = await axios.get(`${API_BASE_URL}/get-user/${userData.emailId}`);
+            const currentUserData = currentUserDataResponse.data;
+
+            let updatedUserData = { ...currentUserData };
+
+            if (Array.isArray(sectionData[section])) {
+                updatedUserData[section] = sectionData[section].map((entry) => {
+                    const existingEntry = currentUserData[section]?.find(e => e.id === entry.id);
+                    return existingEntry ? { ...existingEntry, ...entry } : entry;
+                });
+            } else {
+                updatedUserData[section] = { ...currentUserData[section], ...sectionData[section] };
+            }
+
+            const response = await axios.put(`${API_BASE_URL}/update-user/${userData.displayName}/${userData.emailId}`, updatedUserData);
+
+            updateUserData(response.data);
+        } catch (error) {
+            console.error("Error updating user data:", error.response ? error.response.data : error.message);
+        }
     };
 
     return (
@@ -115,8 +164,8 @@ const UserInput = () => {
                         </div>
                         {visibleSections[section] && (
                             <div className="flex flex-col gap-4 mt-6">
-                                {section === 'basics' && (
-                                    <BasicsSection data={sectionData.basics} onChange={handleSectionDataChange} />
+                                {section === 'personalInfo' && (
+                                    <PersonalInfoSection data={sectionData.personalInfo} onChange={(field, value) => handleSectionDataChange('personalInfo', null, field, value)} />
                                 )}
                                 {section === 'profiles' && (
                                     <ProfilesSection
@@ -254,6 +303,14 @@ const UserInput = () => {
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
+                                <div className="flex justify-end">
+                                    <button
+                                        className="bg-white shadow text-[gray] px-4 py-2 flex justify-center items-center mt-4"
+                                        onClick={() => handleSave(section)}
+                                    >
+                                        <FaSave className="mr-2" /> Save
+                                    </button>
+                                </div>
                             </div>
                         )}
                     </div>

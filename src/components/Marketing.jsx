@@ -1,7 +1,8 @@
 import React from 'react';
 import './Marketing.css'
 
-function Marketing() {
+function Marketing({ uploadStatus }) {
+  console.log(`running marketing.jsx when uploaded is ${uploadStatus.uploaded}`)
   return (
     <div className='w-[60%] max1078:w-[90vw]'>
       <section class='py-12 mt-[10rem] max1078:mt-0'>

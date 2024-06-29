@@ -41,10 +41,16 @@ const Label = styled.label`
     pointer-events: none;
 `;
 
-const InputComponent = ({ label, width }) => {
+const InputComponent = ({ label, value, onChange, width }) => {
     return (
         <Container width={width}>
-            <Input type="text" placeholder=" " id="input" />
+            <Input
+                type="text"
+                placeholder=" "
+                id="input"
+                value={value}
+                onChange={onChange}
+            />
             <Label htmlFor="input">{label}</Label>
         </Container>
     );

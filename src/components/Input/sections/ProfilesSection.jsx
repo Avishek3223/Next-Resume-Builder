@@ -22,6 +22,11 @@ const ProfilesSection = ({ data, onAdd, onRemove, onChange }) => {
                         </select>
                     </div>
                     <InputComponent
+                        label="UserName"
+                        value={entry.userName}
+                        onChange={(e) => onChange('profiles', index, 'userName', e.target.value)}
+                    />
+                    <InputComponent
                         width={100}
                         label="Link"
                         value={entry.link}

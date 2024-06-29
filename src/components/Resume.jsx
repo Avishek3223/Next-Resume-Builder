@@ -72,23 +72,23 @@ const Resume = () => {
                 onMouseDown={handleMouseDown}
             >
                 {resumeData && <PersonalInfoComponent resumeData={resumeData} fontSize={fontSize} />}
-                {resumeData?.workExperience && <WorkExperience workExperience={resumeData.workExperience} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.education && <Education education={resumeData.education} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.academyProjects && <AcademyProjects academyProjects={resumeData.academyProjects} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.positionsOfResponsibility && <PositionsOfResponsibility positionsOfResponsibility={resumeData.positionsOfResponsibility} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.skills && <SkillsAndInterests skills={resumeData.skills} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.certifications && <CertificationsAndLicenses certifications={resumeData.certifications} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.awards && <AwardsAndHonors awards={resumeData.awards} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.volunteerExperiences && <VolunteerExperience volunteerExperiences={resumeData.volunteerExperiences} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.publications && <Publications publications={resumeData.publications} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.affiliations && <ProfessionalAffiliations affiliations={resumeData.affiliations} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.hobbies && <HobbiesAndInterests hobbies={resumeData.hobbies} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.portfolioLinks && <Portfolio portfolioLinks={resumeData.portfolioLinks} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.languages && <Languages languages={resumeData.languages} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.workshops && <WorkshopsAndTrainings workshops={resumeData.workshops} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.courses && <ProfessionalDevelopment courses={resumeData.courses} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.patents && <Patents patents={resumeData.patents} fontSize={fontSize} fontColor={fontColor} />}
-                {resumeData?.endeavors && <ArtisticEndeavors endeavors={resumeData.endeavors} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.workExperience?.length > 0 && <WorkExperience workExperience={resumeData.workExperience} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.education?.length > 0 && <Education education={resumeData.education} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.academyProjects?.length > 0 && <AcademyProjects academyProjects={resumeData.academyProjects} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.positionsOfResponsibility?.length > 0 && <PositionsOfResponsibility positionsOfResponsibility={resumeData.positionsOfResponsibility} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.skills?.length > 0 && <SkillsAndInterests skills={resumeData.skills} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.certifications?.length > 0 && <CertificationsAndLicenses certifications={resumeData.certifications} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.awards?.length > 0 && <AwardsAndHonors awards={resumeData.awards} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.volunteerExperiences?.length > 0 && <VolunteerExperience volunteerExperiences={resumeData.volunteerExperiences} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.publications?.length > 0 && <Publications publications={resumeData.publications} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.affiliations?.length > 0 && <ProfessionalAffiliations affiliations={resumeData.affiliations} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.hobbies?.length > 0 && <HobbiesAndInterests hobbies={resumeData.hobbies} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.portfolioLinks?.length > 0 && <Portfolio portfolioLinks={resumeData.portfolioLinks} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.languages?.length > 0 && <Languages languages={resumeData.languages} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.workshops?.length > 0 && <WorkshopsAndTrainings workshops={resumeData.workshops} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.courses?.length > 0 && <ProfessionalDevelopment courses={resumeData.courses} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.patents?.length > 0 && <Patents patents={resumeData.patents} fontSize={fontSize} fontColor={fontColor} />}
+                {resumeData?.endeavors?.length > 0 && <ArtisticEndeavors endeavors={resumeData.endeavors} fontSize={fontSize} fontColor={fontColor} />}
             </div>
             <ControlButtons zoomIn={zoomIn} zoomOut={zoomOut} />
             <div className="fixed bottom-0 right-0 z-50">

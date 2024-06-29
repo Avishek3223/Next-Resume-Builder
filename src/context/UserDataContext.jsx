@@ -70,21 +70,27 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
         }
     };
 
-    const updateUserData = async (name, emailId, updatedAttributes) => {
-        if (!userData?.displayName || !userData?.emailId) {
+    const updateUserData = async (updatedAttributes) => {
+        if (!userData?.name || !userData?.emailId) {
             logger.error('No user data available for updating.');
             return;
         }
-
+    
         try {
-            logger.debug("Updating user data for:", userData.displayName, userData.emailId, "with attributes:", updatedAttributes);
-            const response = await axios.put(`${API_BASE_URL}/update-user/${userData.displayName}/${userData.emailId}`, updatedAttributes);
+            logger.debug("Updating user data for:", userData.name, userData.emailId, "with attributes:", updatedAttributes);
+            const response = await axios.put(`${API_BASE_URL}/update-user/${userData.name}/${userData.emailId}`, updatedAttributes);
             logger.debug("User data updated:", response.data);
+            setUserData((prevState) => ({
+                ...prevState,
+                ...response.data
+            }));
         } catch (error) {
             logger.error('Error updating user data:', error.message || error);
             setError(error);
         }
-    };
+    };  
+    
+    
 
     return (
         <UserDataContext.Provider value={{ userData, resumeData, createUser, updateUserData }}>
