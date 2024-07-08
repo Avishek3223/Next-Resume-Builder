@@ -4,20 +4,28 @@ const Education = ({ education, fontSize, fontColor }) => (
     <div className="mt-6">
         <h2 className="font-bold mb-2" style={{ fontSize: `${fontSize * 0.89 / 14}rem`, color: fontColor }}>Education</h2>
         {education?.map((educationItem, index) => (
-            <div key={index} className="mb-2">
+            <div key={index} className="mb-4">
                 <div className="flex justify-between items-center text-[#000000]" style={{ fontSize: `${fontSize * 1 / 14}rem` }}>
-                    <div className="flex gap-1">
-                        <div className="font-[500]">{educationItem.university}</div>
-                        <p className="text-[gray]">{educationItem.location}</p>
-                    </div>
-                    <div>
-                        <div className="text-gray-600" style={{ fontSize: `${fontSize * 0.8 / 14}rem` }}>
-                            {educationItem.startDate} - {educationItem.endDate}
+                    <div className="flex flex-col">
+                        <div className="font-bold">
+                            {educationItem.degree}, {educationItem.course}
                         </div>
-                        <div style={{ fontSize: `${fontSize * 0.8 / 14}rem` }}>{educationItem.percentage}</div>
+                        <div className="text-[#000000]" style={{ fontSize: `${fontSize * 0.9 / 14}rem` }}>
+                            {educationItem.institution}
+                        </div>
+                        <div className="text-[#000000]" style={{ fontSize: `${fontSize * 0.9 / 14}rem` }}>
+                            CGPA: {educationItem.percentage}
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <div className="text-gray-600" style={{ fontSize: `${fontSize * 0.9 / 14}rem` }}>
+                            {educationItem.startDate} - {educationItem.present ? "Present" : educationItem.endDate}
+                        </div>
+                        <div className="text-[#000000]" style={{ fontSize: `${fontSize * 0.9 / 14}rem` }}>
+                            {educationItem.location}
+                        </div>
                     </div>
                 </div>
-                <div className="text-[#5c5c5c] mb-3 mt-[-0.5rem]" style={{ fontSize: `${fontSize * 0.8 / 14}rem` }}>{educationItem.degree}</div>
             </div>
         ))}
     </div>

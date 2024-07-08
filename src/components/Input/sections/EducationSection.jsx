@@ -15,9 +15,21 @@ const EducationSection = ({ data, onAdd, onRemove, onChange }) => {
                     />
                     <InputComponent
                         width={100}
+                        label="Institution Location"
+                        value={entry.location}
+                        onChange={(e) => onChange('education', index, 'location', e.target.value)}
+                    />
+                    <InputComponent
+                        width={100}
                         label="Degree"
                         value={entry.degree}
                         onChange={(e) => onChange('education', index, 'degree', e.target.value)}
+                    />
+                    <InputComponent
+                        width={100}
+                        label="Course"
+                        value={entry.course}
+                        onChange={(e) => onChange('education', index, 'course', e.target.value)}
                     />
                     <div className='flex gap-2'>
                         <InputComponent
@@ -28,14 +40,26 @@ const EducationSection = ({ data, onAdd, onRemove, onChange }) => {
                             type="date"
                         />
                         <div className='w-full'>
-                            <InputComponent
-                                width={100}
-                                label="End Date *"
-                                value={entry.endDate}
-                                onChange={(e) => onChange('education', index, 'endDate', e.target.value)}
-                                type="date"
-                            />
-                            <div className="col-span-2 flex -mt-[1rem] items-center gap-2">
+                            {entry.present ? (
+                                <div className="flex flex-col">
+                                    <InputComponent
+                                    width={100}
+                                    label="End Date *"
+                                    value="Present"
+                                    onChange={(e) => onChange('education', index, 'endDate', e.target.value)}
+                                    type="date"
+                                />
+                                </div>
+                            ) : (
+                                <InputComponent
+                                    width={100}
+                                    label="End Date *"
+                                    value={entry.endDate}
+                                    onChange={(e) => onChange('education', index, 'endDate', e.target.value)}
+                                    type="date"
+                                />
+                            )}
+                            <div className="col-span-2 flex -mt-[1rem] items-center gap-2 mb-3">
                                 <input
                                     type="checkbox"
                                     checked={entry.present}
@@ -44,6 +68,22 @@ const EducationSection = ({ data, onAdd, onRemove, onChange }) => {
                                 <label>Present</label>
                             </div>
                         </div>
+                    </div>
+                    <div className='flex justify-center items-center gap-2'>
+                        <select
+                            value={entry.gradeType}
+                            onChange={(e) => onChange('education', index, 'gradeType', e.target.value)}
+                            className="border border-[gray] p-[14px] rounded w-full mb-[20px]"
+                        >
+                            <option value="CGPA">CGPA</option>
+                            <option value="Percentage">Percentage</option>
+                        </select>
+                        <InputComponent
+                            width={100}
+                            label={entry.gradeType}
+                            value={entry.grade}
+                            onChange={(e) => onChange('education', index, 'grade', e.target.value)}
+                        />
                     </div>
                     <button
                         onClick={() => onRemove('education', index)}

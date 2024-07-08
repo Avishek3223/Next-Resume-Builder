@@ -58,7 +58,7 @@ const UserInput = () => {
         },
         profiles: [{ platform: '', username: "", link: '' }],
         workExperience: [{ company: '', region: '', startDate: '', endDate: '', position: '', description: '', technologies: '' }],
-        education: [{ institution: '', degree: '', year: '' }],
+        education: [{ institution: '',course:'', degree: '', year: '' }],
         projects: [{ title: '', description: '', link: '' }],
         positionsOfResponsibility: [{ title: '', description: '' }],
         skills: '',
