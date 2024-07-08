@@ -25,7 +25,7 @@ function Navbar() {
   };
 
   return (
-    <div className='flex justify-between items-center w-full p-6 bg-[#031525] border-b-2 border-black'>
+    <div className='flex justify-between items-center w-full p-6 bg-[#031525] border-b border-black'>
       <div className='text-[2rem] jaro text-white max478:text-[6vw]'>Resume Builder</div>
       <button
         className='text-[1.3rem] font-[500] border bg-[#fff8d7] border-black px-4 py-1 rounded-[6px] max478:text-[5vw]'

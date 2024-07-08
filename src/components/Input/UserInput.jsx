@@ -24,7 +24,7 @@ import './UserInput.css';
 import { API_BASE_URL } from '@/config';
 
 const UserInput = () => {
-    const { userData, updateUserData, resumeData } = useContext(UserDataContext);
+    const { userData, updateUserData, resumeData, resumeDataFetch } = useContext(UserDataContext);
 
     const [visibleSections, setVisibleSections] = useState({
         personalInfo: true,
@@ -56,12 +56,12 @@ const UserInput = () => {
             profilePicture: '',
             summary: ''
         },
-        profiles: [{ platform: '',username:"", link: '' }],
+        profiles: [{ platform: '', username: "", link: '' }],
         workExperience: [{ company: '', region: '', startDate: '', endDate: '', position: '', description: '', technologies: '' }],
         education: [{ institution: '', degree: '', year: '' }],
         projects: [{ title: '', description: '', link: '' }],
         positionsOfResponsibility: [{ title: '', description: '' }],
-        skills: [{ name: '', level: '' }],
+        skills: '',
         certifications: [{ name: '', issuer: '' }],
         awards: [{ name: '', issuer: '' }],
         volunteerExperiences: [{ organization: '', role: '', description: '' }],
@@ -91,21 +91,34 @@ const UserInput = () => {
     };
 
     const handleAddEntry = (section) => {
+        const newEntry = Array.isArray(initialSectionData[section])
+            ? { ...initialSectionData[section][0] }
+            : { ...initialSectionData[section] };
+
         setSectionData((prevState) => ({
             ...prevState,
-            [section]: [...prevState[section], { id: Date.now() }],
+            [section]: Array.isArray(prevState[section])
+                ? [...prevState[section], newEntry]
+                : { ...newEntry },
         }));
     };
 
     const handleRemoveEntry = (section, index) => {
         setSectionData((prevState) => ({
             ...prevState,
-            [section]: prevState[section].filter((_, i) => i !== index),
+            [section]: Array.isArray(prevState[section])
+                ? prevState[section].filter((_, i) => i !== index)
+                : prevState[section],
         }));
     };
 
     const handleSectionDataChange = (section, index, field, value) => {
-        if (Array.isArray(sectionData[section])) {
+        if (section === 'skills') {
+            setSectionData((prevState) => ({
+                ...prevState,
+                [section]: value,
+            }));
+        } else if (Array.isArray(sectionData[section])) {
             const newSectionData = [...sectionData[section]];
             newSectionData[index][field] = value;
             setSectionData((prevState) => ({
@@ -122,17 +135,19 @@ const UserInput = () => {
             }));
         }
     };
-
+    
     const handleSave = async (section) => {
         try {
             console.log(`Saving section: ${section}`);
-
+    
             const currentUserDataResponse = await axios.get(`${API_BASE_URL}/get-user/${userData.emailId}`);
             const currentUserData = currentUserDataResponse.data;
-
+    
             let updatedUserData = { ...currentUserData };
-
-            if (Array.isArray(sectionData[section])) {
+    
+            if (section === 'skills') {
+                updatedUserData[section] = sectionData[section].split(',').map(skill => skill.trim());
+            } else if (Array.isArray(sectionData[section])) {
                 updatedUserData[section] = sectionData[section].map((entry) => {
                     const existingEntry = currentUserData[section]?.find(e => e.id === entry.id);
                     return existingEntry ? { ...existingEntry, ...entry } : entry;
@@ -140,15 +155,16 @@ const UserInput = () => {
             } else {
                 updatedUserData[section] = { ...currentUserData[section], ...sectionData[section] };
             }
-
+    
             const response = await axios.put(`${API_BASE_URL}/update-user/${userData.displayName}/${userData.emailId}`, updatedUserData);
-
+    
             updateUserData(response.data);
+            resumeDataFetch()
         } catch (error) {
             console.error("Error updating user data:", error.response ? error.response.data : error.message);
         }
     };
-
+    
     return (
         <div className='w-[33rem] h-[92vh] border-2 bg-[#ffffff] shadow-lg p-5 overflow-y-scroll max-h-screen scrollbar-hide'>
             <div>
@@ -204,14 +220,6 @@ const UserInput = () => {
                                         data={sectionData.positionsOfResponsibility}
                                         onAdd={() => handleAddEntry('positionsOfResponsibility')}
                                         onRemove={(index) => handleRemoveEntry('positionsOfResponsibility', index)}
-                                        onChange={handleSectionDataChange}
-                                    />
-                                )}
-                                {section === 'skills' && (
-                                    <SkillsSection
-                                        data={sectionData.skills}
-                                        onAdd={() => handleAddEntry('skills')}
-                                        onRemove={(index) => handleRemoveEntry('skills', index)}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
@@ -301,6 +309,12 @@ const UserInput = () => {
                                         onAdd={() => handleAddEntry('endeavors')}
                                         onRemove={(index) => handleRemoveEntry('endeavors', index)}
                                         onChange={handleSectionDataChange}
+                                    />
+                                )}
+                                {section === 'skills' && (
+                                    <SkillsSection
+                                        data={sectionData.skills}
+                                        onChange={(value) => handleSectionDataChange('skills', null, null, value)}
                                     />
                                 )}
                                 <div className="flex justify-end">

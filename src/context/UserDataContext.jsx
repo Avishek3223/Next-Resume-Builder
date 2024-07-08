@@ -16,6 +16,9 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
     const [resumeData, setResumeData] = useState(initialResumeData);
     const [loading, setLoading] = useState(!initialUserData);
     const [error, setError] = useState(null);
+    const [uploadStatus, setUploadStatus] = useState({ uploaded: false, fileUrl: null });
+    const [uploading, setUploading] = useState(false);
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
         const getUserDataFromCache = async () => {
@@ -37,7 +40,62 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
         getUserDataFromCache();
     }, []);
 
-    const { data: resumeDataResponse, error: resumeDataError } = useSWR(
+    const handleUploadResume = async (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setUploading(true);
+            setMessage('');
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                const base64Content = reader.result.split(',')[1];
+                try {
+                    const uploadResponse = await axios.post('https://ic1rqexx2c.execute-api.us-east-1.amazonaws.com/dev/upload/resume', {
+                        fileName: file.name,
+                        fileContent: base64Content,
+                    });
+
+                    setMessage('File uploaded successfully!');
+                    const uploadedFileUrl = `https://resume-reviewe.s3.amazonaws.com/${file.name}`;
+
+                    // Directly retrieve the file after upload
+                    try {
+                        const retrieveResponse = await axios.get('https://ic1rqexx2c.execute-api.us-east-1.amazonaws.com/dev/get-uploaded/resume', {
+                            params: {
+                                fileName: file.name,
+                            },
+                        });
+
+                        setMessage('File retrieved successfully!');
+                        const fileUrl = retrieveResponse.data.fileUrl;
+                        setUploadStatus({ uploaded: true, fileUrl: fileUrl });
+                    } catch (retrieveError) {
+                        console.error('Error retrieving file:', retrieveError);
+                        setMessage('File retrieve failed. Please try again.');
+                        if (uploadStatus.uploaded) {
+                            setUploadStatus((prevStatus) => ({
+                                ...prevStatus,
+                                uploaded: false
+                            }));
+                        }
+                    }
+                } catch (uploadError) {
+                    console.error('Error uploading file:', uploadError);
+                    setMessage('File upload failed. Please try again.');
+                    if (uploadStatus.uploaded) {
+                        setUploadStatus((prevStatus) => ({
+                            ...prevStatus,
+                            uploaded: false
+                        }));
+                    }
+                } finally {
+                    setUploading(false);
+                }
+            };
+        }
+    };
+
+    const { data: resumeDataResponse, error: resumeDataError, mutate: resumeDataFetch } = useSWR(
         userData?.emailId ? `${API_BASE_URL}/get-user/${userData.emailId}` : null,
         fetcher,
         {
@@ -75,7 +133,7 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
             logger.error('No user data available for updating.');
             return;
         }
-    
+
         try {
             logger.debug("Updating user data for:", userData.name, userData.emailId, "with attributes:", updatedAttributes);
             const response = await axios.put(`${API_BASE_URL}/update-user/${userData.name}/${userData.emailId}`, updatedAttributes);
@@ -88,12 +146,10 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
             logger.error('Error updating user data:', error.message || error);
             setError(error);
         }
-    };  
-    
-    
+    };
 
     return (
-        <UserDataContext.Provider value={{ userData, resumeData, createUser, updateUserData }}>
+        <UserDataContext.Provider value={{ userData, resumeData, createUser, updateUserData, handleUploadResume, message, uploading, uploadStatus, resumeDataFetch }}>
             {loading ? (
                 <div>Loading...</div>
             ) : error ? (

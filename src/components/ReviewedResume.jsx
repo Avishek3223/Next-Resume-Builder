@@ -2,7 +2,7 @@ import React from 'react';
 
 const ReviewedResume = ({ reviewContent }) => {
   return (
-    <div className="reviewed-resume">
+    <div className="w-[50%] h-full bg-white">
       <h2>Reviewed Resume</h2>
       <p>{reviewContent}</p>
     </div>

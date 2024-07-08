@@ -25,3 +25,20 @@
     }
   }
   
+  .pdfViewer {
+    width: 100%; /* Adjust width as needed */
+    height: 100%; /* Adjust height as needed */
+    overflow: hidden; /* Hide scrollbar */
+    background-color: #fff; /* White background for the PDF */
+    padding: 1rem; /* Add padding */
+  }
+  
+  .hello::-webkit-scrollbar {
+    display: none !important;
+  }
+  
+  /* Hide scrollbar for IE, Edge, and Firefox */
+  .hello {
+    -ms-overflow-style: none !important;  /* IE and Edge */
+    scrollbar-width: none !important;  /* Firefox */
+  }
