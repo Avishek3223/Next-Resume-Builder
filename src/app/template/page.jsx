@@ -46,7 +46,7 @@ function Template() {
           <img className='w-11 h-11 rounded-full' src={userData.photoURL} alt="User Avatar" />
         </div>
       )}
-      <div className="flex gap-[10rem]">
+      <div className="flex">
         <UserInput />
         <Resume />
         {/* <div className='cursor-pointer' onClick={logOut}>Logout</div> */}
