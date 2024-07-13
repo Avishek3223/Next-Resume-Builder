@@ -1,11 +1,9 @@
-// app/layout.js
 import { UserDataProvider } from '@/context/UserDataContext';
 import './globals.css';
 import axios from 'axios';
 import { API_BASE_URL } from '@/config';
 import dotenv from 'dotenv';
 dotenv.config();
-
 
 // This function fetches the initial data on the server side
 async function fetchInitialData() {
@@ -30,8 +28,14 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet" />
+      </head>
       <body>
-      <UserDataProvider initialUserData={initialUserData} initialResumeData={initialResumeData}>
+        <UserDataProvider initialUserData={initialUserData} initialResumeData={initialResumeData}>
           {children}
         </UserDataProvider>
       </body>

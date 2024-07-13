@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { FaPlus, FaMinus, FaSave } from 'react-icons/fa';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { FaPlus, FaMinus, FaSave, FaTrash } from 'react-icons/fa';
 import axios from 'axios';
 import { UserDataContext } from '@/context/UserDataContext';
 import PersonalInfoSection from './sections/PersonalInfoSection';
@@ -20,13 +19,13 @@ import WorkshopsSection from './sections/WorkshopsSection';
 import CoursesSection from './sections/CoursesSection';
 import PatentsSection from './sections/PatentsSection';
 import EndeavorsSection from './sections/EndeavorsSection';
+import ProjectsSection from './sections/ProjectsSection';
 import './UserInput.css';
 import { API_BASE_URL } from '@/config';
-import ProjectsSection from './sections/ProjectsSection';
 
 const UserInput = () => {
-    const { userData, updateUserData, resumeData, resumeDataFetch, sectionData, setSectionData } = useContext(UserDataContext);
-    const [loading, setLoading] = useState({});
+    const { userData, updateUserData, resumeData, resumeDataFetch } = useContext(UserDataContext);
+    const [loading, setLoading] = useState(false);
 
     const [visibleSections, setVisibleSections] = useState({
         personalInfo: true,
@@ -49,6 +48,42 @@ const UserInput = () => {
         endeavors: false,
     });
 
+    const initialSectionData = {
+        personalInfo: {
+            name: '',
+            jobTitle: '',
+            emailId: '',
+            phone: '',
+            profilePicture: '',
+            summary: ''
+        },
+        profiles: [{ platform: '', username: "", link: '' }],
+        workExperience: [{ company: '', region: '', startDate: '', endDate: '', position: '', description: '', technologies: '' }],
+        education: [{ institution: '', course: '', degree: '', year: '' }],
+        projects: [{ title: '', description: '', link: '' }],
+        positionsOfResponsibility: [{ title: '', description: '' }],
+        skills: '',
+        certifications: [{ name: '', issuer: '' }],
+        awards: [{ name: '', issuer: '' }],
+        volunteerExperiences: [{ organization: '', role: '', description: '' }],
+        publications: [{ title: '', journal: '', year: '' }],
+        affiliations: [{ organization: '', role: '' }],
+        hobbies: [{ name: '' }],
+        languages: [{ language: '', level: '' }],
+        workshops: [{ title: '', organizer: '', year: '' }],
+        courses: [{ title: '', provider: '', year: '' }],
+        patents: [{ title: '', description: '', year: '' }],
+        endeavors: [{ title: '', description: '' }],
+    };
+
+    const [sectionData, setSectionData] = useState(initialSectionData);
+
+    useEffect(() => {
+        if (resumeData) {
+            setSectionData(resumeData);
+        }
+    }, [resumeData]);
+
     const toggleSectionVisibility = (section) => {
         setVisibleSections((prevState) => ({
             ...prevState,
@@ -69,12 +104,10 @@ const UserInput = () => {
         }));
     };
 
-    const handleRemoveEntry = (section, index) => {
+    const handleRemoveEntry = (section) => (index) => {
         setSectionData((prevState) => ({
             ...prevState,
-            [section]: Array.isArray(prevState[section])
-                ? prevState[section].filter((_, i) => i !== index)
-                : prevState[section],
+            [section]: prevState[section].filter((_, i) => i !== index),
         }));
     };
 
@@ -103,7 +136,7 @@ const UserInput = () => {
     };
 
     const handleSave = async (section) => {
-        setLoading((prev) => ({ ...prev, [section]: true }));
+        setLoading(true);
         try {
             console.log(`Saving section: ${section}`);
 
@@ -122,16 +155,16 @@ const UserInput = () => {
             } else {
                 updatedUserData[section] = { ...currentUserData[section], ...sectionData[section] };
             }
+
             const response = await axios.put(`${API_BASE_URL}/update-user/${userData.displayName}/${userData.emailId}`, updatedUserData);
 
             updateUserData(response.data);
-            if (response.data) {
-                resumeDataFetch();
-            }
+            resumeDataFetch();
         } catch (error) {
             console.error("Error updating user data:", error.response ? error.response.data : error.message);
+        } finally {
+            setLoading(false);
         }
-        setLoading((prev) => ({ ...prev, [section]: false }));
     };
 
     return (
@@ -150,142 +183,155 @@ const UserInput = () => {
                         {visibleSections[section] && (
                             <div className="flex flex-col gap-4 mt-6">
                                 {section === 'personalInfo' && (
-                                    <PersonalInfoSection data={resumeData.personalInfo || sectionData.personalInfo} onChange={(field, value) => handleSectionDataChange('personalInfo', null, field, value)} />
+                                    <PersonalInfoSection data={sectionData.personalInfo} onChange={(field, value) => handleSectionDataChange('personalInfo', null, field, value)} />
                                 )}
                                 {section === 'profiles' && (
                                     <ProfilesSection
-                                        data={resumeData.profiles || sectionData.profiles}
+                                        data={sectionData.profiles}
                                         onAdd={() => handleAddEntry('profiles')}
-                                        onRemove={(index) => handleRemoveEntry('profiles', index)}
+                                        onRemove={handleRemoveEntry('profiles')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
                                 {section === 'workExperience' && (
                                     <WorkExperienceSection
-                                        data={resumeData.workExperience || sectionData.workExperience}
+                                        data={sectionData.workExperience}
                                         onAdd={() => handleAddEntry('workExperience')}
-                                        onRemove={(index) => handleRemoveEntry('workExperience', index)}
+                                        onRemove={handleRemoveEntry('workExperience')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
                                 {section === 'education' && (
                                     <EducationSection
-                                        data={resumeData.education || sectionData.education}
+                                        data={sectionData.education}
                                         onAdd={() => handleAddEntry('education')}
-                                        onRemove={(index) => handleRemoveEntry('education', index)}
+                                        onRemove={handleRemoveEntry('education')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
                                 {section === 'projects' && (
                                     <ProjectsSection
-                                        data={resumeData.projects || sectionData.projects}
+                                        data={sectionData.academyProjects}
                                         onAdd={() => handleAddEntry('projects')}
-                                        onRemove={(index) => handleRemoveEntry('projects', index)}
+                                        onRemove={handleRemoveEntry('projects')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
                                 {section === 'positionsOfResponsibility' && (
                                     <PositionsOfResponsibilitySection
-                                        data={resumeData.positionsOfResponsibility || sectionData.positionsOfResponsibility}
+                                        data={sectionData.positionsOfResponsibility}
                                         onAdd={() => handleAddEntry('positionsOfResponsibility')}
-                                        onRemove={(index) => handleRemoveEntry('positionsOfResponsibility', index)}
+                                        onRemove={handleRemoveEntry('positionsOfResponsibility')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
-                                {section === 'skills' && (
-                                    <SkillsSection data={resumeData.skills || sectionData.skills} onChange={(value) => handleSectionDataChange('skills', null, null, value)} />
-                                )}
                                 {section === 'certifications' && (
                                     <CertificationsSection
-                                        data={resumeData.certifications || sectionData.certifications}
+                                        data={sectionData.certifications}
                                         onAdd={() => handleAddEntry('certifications')}
-                                        onRemove={(index) => handleRemoveEntry('certifications', index)}
+                                        onRemove={handleRemoveEntry('certifications')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
                                 {section === 'awards' && (
                                     <AwardsSection
-                                        data={resumeData.awards || sectionData.awards}
+                                        data={sectionData.awards}
                                         onAdd={() => handleAddEntry('awards')}
-                                        onRemove={(index) => handleRemoveEntry('awards', index)}
+                                        onRemove={handleRemoveEntry('awards')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
                                 {section === 'volunteerExperiences' && (
                                     <VolunteerExperiencesSection
-                                        data={resumeData.volunteerExperiences || sectionData.volunteerExperiences}
+                                        data={sectionData.volunteerExperiences}
                                         onAdd={() => handleAddEntry('volunteerExperiences')}
-                                        onRemove={(index) => handleRemoveEntry('volunteerExperiences', index)}
+                                        onRemove={handleRemoveEntry('volunteerExperiences')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
                                 {section === 'publications' && (
                                     <PublicationsSection
-                                        data={resumeData.publications || sectionData.publications}
+                                        data={sectionData.publications}
                                         onAdd={() => handleAddEntry('publications')}
-                                        onRemove={(index) => handleRemoveEntry('publications', index)}
+                                        onRemove={handleRemoveEntry('publications')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
                                 {section === 'affiliations' && (
                                     <AffiliationsSection
-                                        data={resumeData.affiliations || sectionData.affiliations}
+                                        data={sectionData.affiliations}
                                         onAdd={() => handleAddEntry('affiliations')}
-                                        onRemove={(index) => handleRemoveEntry('affiliations', index)}
+                                        onRemove={handleRemoveEntry('affiliations')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
                                 {section === 'hobbies' && (
                                     <HobbiesSection
-                                        data={resumeData.hobbies || sectionData.hobbies}
+                                        data={sectionData.hobbies}
                                         onAdd={() => handleAddEntry('hobbies')}
-                                        onRemove={(index) => handleRemoveEntry('hobbies', index)}
+                                        onRemove={handleRemoveEntry('hobbies')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
                                 {section === 'languages' && (
                                     <LanguagesSection
-                                        data={resumeData.languages || sectionData.languages}
+                                        data={sectionData.languages}
                                         onAdd={() => handleAddEntry('languages')}
-                                        onRemove={(index) => handleRemoveEntry('languages', index)}
+                                        onRemove={handleRemoveEntry('languages')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
                                 {section === 'workshops' && (
                                     <WorkshopsSection
-                                        data={resumeData.workshops || sectionData.workshops}
+                                        data={sectionData.workshops}
                                         onAdd={() => handleAddEntry('workshops')}
-                                        onRemove={(index) => handleRemoveEntry('workshops', index)}
+                                        onRemove={handleRemoveEntry('workshops')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
                                 {section === 'courses' && (
                                     <CoursesSection
-                                        data={resumeData.courses || sectionData.courses}
+                                        data={sectionData.courses}
                                         onAdd={() => handleAddEntry('courses')}
-                                        onRemove={(index) => handleRemoveEntry('courses', index)}
+                                        onRemove={handleRemoveEntry('courses')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
                                 {section === 'patents' && (
                                     <PatentsSection
-                                        data={resumeData.patents || sectionData.patents}
+                                        data={sectionData.patents}
                                         onAdd={() => handleAddEntry('patents')}
-                                        onRemove={(index) => handleRemoveEntry('patents', index)}
+                                        onRemove={handleRemoveEntry('patents')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
                                 {section === 'endeavors' && (
                                     <EndeavorsSection
-                                        data={resumeData.endeavors || sectionData.endeavors}
+                                        data={sectionData.endeavors}
                                         onAdd={() => handleAddEntry('endeavors')}
-                                        onRemove={(index) => handleRemoveEntry('endeavors', index)}
+                                        onRemove={handleRemoveEntry('endeavors')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
-                                <div className='w-full flex justify-end'>
-                                    <button className="text-black text-[1rem] mt-6 flex items-center justify-center gap-2 shadow-md w-[7rem] p-2" onClick={() => handleSave(section)}>
-                                        {loading[section] ? <AiOutlineLoading3Quarters className="animate-spin" /> : <FaSave />} Save
+                                {section === 'skills' && (
+                                    <SkillsSection
+                                        data={sectionData.skills}
+                                        onChange={(value) => handleSectionDataChange('skills', null, null, value)}
+                                    />
+                                )}
+                                <div className="flex justify-end">
+                                    <button
+                                        className="bg-white shadow text-[gray] w-[7rem] px-4 py-2 flex justify-center items-center mt-4"
+                                        onClick={() => handleSave(section)}
+                                        disabled={loading}
+                                    >
+                                        {loading ? (
+                                            <div className="spinner" />
+                                        ) : (
+                                            <>
+                                                <FaSave className="mr-2" /> Save
+                                            </>
+                                        )}
                                     </button>
                                 </div>
                             </div>

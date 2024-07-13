@@ -1,50 +1,77 @@
 /* WebKit browsers */
 .scrollbar-hide {
-    scrollbar-width: thin; /* Firefox */
-    scrollbar-color: #dbdbdb transparent; /* Firefox */
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: #dbdbdb transparent;
+  /* Firefox */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-    width: 1px; /* Change this value to make the scrollbar narrower or wider */
-    height: 8px; /* Change this value to make the scrollbar narrower or wider */
+  width: 1px;
+  /* Change this value to make the scrollbar narrower or wider */
+  height: 8px;
+  /* Change this value to make the scrollbar narrower or wider */
 }
 
 .scrollbar-hide::-webkit-scrollbar-thumb {
-    background: #ccc; /* Color of the scrollbar thumb */
-    border-radius: 10px; /* Roundness of the scrollbar thumb */
+  background: #ccc;
+  /* Color of the scrollbar thumb */
+  border-radius: 10px;
+  /* Roundness of the scrollbar thumb */
 }
 
 .scrollbar-hide::-webkit-scrollbar-thumb:hover {
-    background: #c2c2c2; /* Color of the scrollbar thumb when hovered */
+  background: #c2c2c2;
+  /* Color of the scrollbar thumb when hovered */
 }
 
 .scrollbar-hide::-webkit-scrollbar-track {
-    background: transparent; /* Color of the scrollbar track */
+  background: transparent;
+  /* Color of the scrollbar track */
 }
 
 /* UserInput.css */
 .skeleton {
+  background-color: #e0e0e0;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
     background-color: #e0e0e0;
-    animation: pulse 1.5s infinite;
   }
-  
-  @keyframes pulse {
-    0% {
-      background-color: #e0e0e0;
-    }
-    50% {
-      background-color: #f0f0f0;
-    }
-    100% {
-      background-color: #e0e0e0;
-    }
+
+  50% {
+    background-color: #f0f0f0;
   }
-  
-  .skeleton-circle {
-    border-radius: 50%;
+
+  100% {
+    background-color: #e0e0e0;
   }
-  
-  .skeleton-text {
-    border-radius: 4px;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+}
+
+.skeleton-text {
+  border-radius: 4px;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #000;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+      transform: rotate(0deg);
   }
-  
+  100% {
+      transform: rotate(360deg);
+  }
+}

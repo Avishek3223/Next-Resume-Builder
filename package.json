@@ -35,6 +35,7 @@
     "pdfjs-dist": "^3.11.174",
     "react": "^18",
     "react-avatar-editor": "^13.0.2",
+    "react-circular-progressbar": "^2.1.0",
     "react-color": "^2.19.3",
     "react-dom": "^18",
     "react-easy-crop": "^5.0.7",

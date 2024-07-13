@@ -40,6 +40,7 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
         getUserDataFromCache();
     }, []);
 
+    const [retrivedResumeReview, setRetrivedResumeReview] = useState({})
     const handleUploadResume = async (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -69,6 +70,7 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
                         setMessage('File retrieved successfully!');
                         const fileUrl = retrieveResponse.data.fileUrl;
                         setUploadStatus({ uploaded: true, fileUrl: fileUrl });
+                        setRetrivedResumeReview(retrieveResponse.data.completions)
                     } catch (retrieveError) {
                         console.error('Error retrieving file:', retrieveError);
                         setMessage('File retrieve failed. Please try again.');
@@ -95,36 +97,6 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
         }
     };
 
-    const initialSectionData = {
-        personalInfo: {
-            name: '',
-            jobTitle: '',
-            emailId: '',
-            phone: '',
-            profilePicture: '',
-            summary: ''
-        },
-        profiles: [{ platform: '', username: "", link: '' }],
-        workExperience: [{ company: '', region: '', startDate: '', endDate: '', position: '', description: '', technologies: '' }],
-        education: [{ institution: '', course: '', degree: '', year: '' }],
-        projects: [{ title: '', description: '', link: '' }],
-        positionsOfResponsibility: [{ title: '', description: '' }],
-        skills: '',
-        certifications: [{ name: '', issuer: '' }],
-        awards: [{ name: '', issuer: '' }],
-        volunteerExperiences: [{ organization: '', role: '', description: '' }],
-        publications: [{ title: '', journal: '', year: '' }],
-        affiliations: [{ organization: '', role: '' }],
-        hobbies: [{ name: '' }],
-        languages: [{ language: '', level: '' }],
-        workshops: [{ title: '', organizer: '', year: '' }],
-        courses: [{ title: '', provider: '', year: '' }],
-        patents: [{ title: '', description: '', year: '' }],
-        endeavors: [{ title: '', description: '' }],
-    };
-
-    const [sectionData, setSectionData] = useState(initialSectionData);
-
     const { data: resumeDataResponse, error: resumeDataError, mutate: resumeDataFetch } = useSWR(
         userData?.emailId ? `${API_BASE_URL}/get-user/${userData.emailId}` : null,
         fetcher,
@@ -140,7 +112,6 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
         if (resumeDataResponse) {
             console.log("Fetched resume data:", resumeDataResponse);
             setResumeData(resumeDataResponse);
-            setSectionData(resumeDataResponse);
         }
         if (resumeDataError) {
             logger.error("Error fetching resume data:", resumeDataError);
@@ -180,7 +151,7 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
     };
 
     return (
-        <UserDataContext.Provider value={{ userData, resumeData, createUser, updateUserData, handleUploadResume, message, uploading, uploadStatus, resumeDataFetch, sectionData, setSectionData}}>
+        <UserDataContext.Provider value={{ userData, resumeData, createUser, updateUserData, handleUploadResume, message, uploading, uploadStatus, resumeDataFetch,retrivedResumeReview}}>
             {loading ? (
                 <div>Loading...</div>
             ) : error ? (

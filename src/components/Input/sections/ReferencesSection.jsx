@@ -18,7 +18,7 @@ const ReferencesSection = ({ data, onAdd, onRemove, onChange }) => {
                         onChange={(e) => onChange('references', index, 'contact', e.target.value)}
                     />
                     <button
-                        onClick={() => onRemove('references', index)}
+                        onClick={() => onRemove(index)}
                         className="self-end text-red-500 hover:text-red-700 transition duration-200"
                     >
                         <FaMinus /> Remove

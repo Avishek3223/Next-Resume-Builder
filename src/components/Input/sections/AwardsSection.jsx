@@ -20,7 +20,7 @@ const AwardsSection = ({ data, onAdd, onRemove, onChange }) => {
                         onChange={(e) => onChange('awards', index, 'organization', e.target.value)}
                     />
                     <button
-                        onClick={() => onRemove('awards', index)}
+                        onClick={() => onRemove(index)}
                         className="w-[20%] p-2 text-center flex justify-center items-center gap-2 bg-[#ffffff] drop-shadow text-red-500 hover:text-red-700 transition duration-200 col-span-2"
                     >
                         <FaMinus /> Remove
@@ -28,7 +28,7 @@ const AwardsSection = ({ data, onAdd, onRemove, onChange }) => {
                 </div>
             ))}
             <button
-                onClick={() => onAdd('awards')}
+                onClick={onAdd}
                 className="w-[20%] ml-auto p-2 text-center flex justify-center items-center gap-2 bg-[#ffffff] drop-shadow text-green-500 hover:text-green-700 transition duration-200 col-span-2"
             >
                 <FaPlus /> Add

@@ -25,7 +25,7 @@ const VolunteerExperiencesSection = ({ data, onAdd, onRemove, onChange }) => {
                         rows="4"
                     />
                     <button
-                        onClick={() => onRemove('volunteerExperiences', index)}
+                        onClick={() => onRemove(index)}
                         className="w-[20%] p-2 text-center flex justify-center items-center gap-2 bg-[#ffffff] drop-shadow text-red-500 hover:text-red-700 transition duration-200 col-span-2"
                     >
                         <FaMinus /> Remove
