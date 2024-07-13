@@ -3,6 +3,9 @@ import { UserDataProvider } from '@/context/UserDataContext';
 import './globals.css';
 import axios from 'axios';
 import { API_BASE_URL } from '@/config';
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 // This function fetches the initial data on the server side
 async function fetchInitialData() {

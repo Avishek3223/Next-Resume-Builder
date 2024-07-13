@@ -3,6 +3,8 @@ import Marketing from '@/components/Marketing';
 import Navbar from '@/components/Navbar';
 import UploadForm from '@/components/UploadForm';
 import RootLayout from './layout';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export default function Home() {
   return (

@@ -95,6 +95,36 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
         }
     };
 
+    const initialSectionData = {
+        personalInfo: {
+            name: '',
+            jobTitle: '',
+            emailId: '',
+            phone: '',
+            profilePicture: '',
+            summary: ''
+        },
+        profiles: [{ platform: '', username: "", link: '' }],
+        workExperience: [{ company: '', region: '', startDate: '', endDate: '', position: '', description: '', technologies: '' }],
+        education: [{ institution: '', course: '', degree: '', year: '' }],
+        projects: [{ title: '', description: '', link: '' }],
+        positionsOfResponsibility: [{ title: '', description: '' }],
+        skills: '',
+        certifications: [{ name: '', issuer: '' }],
+        awards: [{ name: '', issuer: '' }],
+        volunteerExperiences: [{ organization: '', role: '', description: '' }],
+        publications: [{ title: '', journal: '', year: '' }],
+        affiliations: [{ organization: '', role: '' }],
+        hobbies: [{ name: '' }],
+        languages: [{ language: '', level: '' }],
+        workshops: [{ title: '', organizer: '', year: '' }],
+        courses: [{ title: '', provider: '', year: '' }],
+        patents: [{ title: '', description: '', year: '' }],
+        endeavors: [{ title: '', description: '' }],
+    };
+
+    const [sectionData, setSectionData] = useState(initialSectionData);
+
     const { data: resumeDataResponse, error: resumeDataError, mutate: resumeDataFetch } = useSWR(
         userData?.emailId ? `${API_BASE_URL}/get-user/${userData.emailId}` : null,
         fetcher,
@@ -108,8 +138,9 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
 
     useEffect(() => {
         if (resumeDataResponse) {
-            logger.debug("Fetched resume data:", resumeDataResponse);
+            console.log("Fetched resume data:", resumeDataResponse);
             setResumeData(resumeDataResponse);
+            setSectionData(resumeDataResponse);
         }
         if (resumeDataError) {
             logger.error("Error fetching resume data:", resumeDataError);
@@ -149,7 +180,7 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
     };
 
     return (
-        <UserDataContext.Provider value={{ userData, resumeData, createUser, updateUserData, handleUploadResume, message, uploading, uploadStatus, resumeDataFetch }}>
+        <UserDataContext.Provider value={{ userData, resumeData, createUser, updateUserData, handleUploadResume, message, uploading, uploadStatus, resumeDataFetch, sectionData, setSectionData}}>
             {loading ? (
                 <div>Loading...</div>
             ) : error ? (

@@ -5,7 +5,7 @@ const WorkExperience = ({ workExperience, fontSize, fontColor }) => (
         <h2 className="font-bold mb-2 border-b border-b-[#979797]" style={{ fontSize: `${fontSize * 0.95 / 14}rem`, color: fontColor }}>WORK EXPERIENCE</h2>
         {workExperience?.map((experience, index) => (
             <div key={index} className="mb-2">
-                <div className="flex justify-between items-center text-[#000000]" style={{ fontSize: `${fontSize * 0.85 / 14}rem` }}>
+                <div className="flex justify-between items-center text-[#000000]" style={{ fontSize: `${fontSize * 0.8 / 14}rem` }}>
                     <div className="font-[600]">{experience.company}</div>
                     <div className="text-gray-600" style={{ fontSize: `${fontSize * 0.8 / 14}rem` }}>{experience.startDate} - {experience.endDate}</div>
                 </div>

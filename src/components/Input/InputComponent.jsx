@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -41,7 +41,7 @@ const Label = styled.label`
     pointer-events: none;
 `;
 
-const InputComponent = ({ label, value, onChange, width }) => {
+const InputComponent = memo(({ label, value, onChange, width }) => {
     return (
         <Container width={width}>
             <Input
@@ -54,6 +54,6 @@ const InputComponent = ({ label, value, onChange, width }) => {
             <Label htmlFor="input">{label}</Label>
         </Container>
     );
-};
+});
 
 export default InputComponent;

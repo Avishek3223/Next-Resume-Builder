@@ -1,13 +1,17 @@
 import React from 'react';
 
 const ProfilePicture = ({ imageUrl }) => (
-    <div className="border border-black w-[7rem] h-[7rem]">
-        {imageUrl && <img src={imageUrl} alt="Profile" className="w-full h-full object-cover" />}
-    </div>
+    <>
+        {imageUrl && (
+            <div className=" w-[8rem] h-[8rem] p-1">
+                {imageUrl && <img src={imageUrl} alt="Profile" className="w-full h-full object-cover" />}
+            </div>
+        )}
+    </>
 );
 
 const PersonalInformation = ({ resumeData, fontSize }) => (
-    <div className="flex flex-col justify-start items-start">
+    <div className="flex flex-col justify-center items-start">
         <div className="font-[500]" style={{ fontSize: `${fontSize * 1.4 / 14}rem` }}>{resumeData?.name}</div>
         <div className="text-[#5c5c5c] mb-3" style={{ fontSize: `${fontSize * 0.8 / 14}rem` }}>{resumeData?.personalInfo?.jobTitle}</div>
 
@@ -73,7 +77,7 @@ const Links = ({ resumeData, fontSize }) => (
 );
 
 const ProfessionalSummary = ({ summary, fontSize }) => (
-    <div className="text-[#414141] mt-2 border-b-2 border-[#cccccc] pb-5" style={{ fontSize: `${fontSize * 0.75 / 14}rem` }}>
+    <div className="text-[#414141] mt-2 border-b-2 border-[#cccccc] pb-5 px-2 text-justify" style={{ fontSize: `${fontSize * 0.75 / 14}rem` }}>
         {summary && <div>{summary}</div>}
     </div>
 );
@@ -81,7 +85,7 @@ const ProfessionalSummary = ({ summary, fontSize }) => (
 const PersonalInfoComponent = ({ resumeData, fontSize }) => (
     <>
         <div className="w-full flex gap-6">
-            <ProfilePicture imageUrl={resumeData?.personalInfo?.imageUrl} />
+        <ProfilePicture imageUrl={resumeData?.personalInfo?.profilePicture} />
             <div className='flex justify-between w-[80%]'>
                 <PersonalInformation resumeData={resumeData} fontSize={fontSize} />
                 <Links resumeData={resumeData} fontSize={fontSize} />

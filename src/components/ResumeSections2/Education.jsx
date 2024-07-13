@@ -7,14 +7,14 @@ const Education = ({ education, fontSize, fontColor }) => (
             <div key={index} className="mb-4">
                 <div className="flex justify-between items-center text-[#000000]" style={{ fontSize: `${fontSize * 1 / 14}rem` }}>
                     <div className="flex flex-col">
-                        <div className="font-bold">
+                        <div className="font-[500]">
                             {educationItem.degree}, {educationItem.course}
                         </div>
                         <div className="text-[#000000]" style={{ fontSize: `${fontSize * 0.9 / 14}rem` }}>
                             {educationItem.institution}
                         </div>
                         <div className="text-[#000000]" style={{ fontSize: `${fontSize * 0.9 / 14}rem` }}>
-                            CGPA: {educationItem.percentage}
+                            {educationItem.gradeType}: {educationItem.grade}
                         </div>
                     </div>
                     <div className="text-right">

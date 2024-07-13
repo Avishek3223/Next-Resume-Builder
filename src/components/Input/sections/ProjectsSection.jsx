@@ -3,6 +3,7 @@ import { FaPlus, FaMinus } from 'react-icons/fa';
 import InputComponent from '../InputComponent';
 
 const ProjectsSection = ({ data, onAdd, onRemove, onChange }) => {
+  console.log(data)
   return (
     <div className="flex flex-col gap-4">
       {data.map((entry, index) => (

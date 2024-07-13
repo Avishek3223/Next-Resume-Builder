@@ -10,7 +10,7 @@ const PositionsOfResponsibility = ({ positionsOfResponsibility, fontSize, fontCo
                         <div className="font-[500]">{position.title}</div>
                         <div className="text-gray-600" style={{ fontSize: `${fontSize * 0.8 / 14}rem` }}>{position.startDate} - {position.endDate}</div>
                     </div>
-                    <div className="mt-2" style={{ fontSize: `${fontSize * 0.8 / 14}rem` }}>{position.description}</div>
+                    <div className="mt-2 text-justify" style={{ fontSize: `${fontSize * 0.8 / 14}rem` }}>{position.description}</div>
                 </div>
             </div>
         ))}

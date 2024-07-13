@@ -3,7 +3,7 @@ import React from 'react';
 const ProfilePicture = ({ imageUrl }) => (
     <>
         {imageUrl && (
-            <div className="border border-black w-[7rem] h-[7rem]">
+            <div className=" w-[9rem] h-[8.1rem] p-1">
                 {imageUrl && <img src={imageUrl} alt="Profile" className="w-full h-full object-cover" />}
             </div>
         )}
@@ -12,7 +12,7 @@ const ProfilePicture = ({ imageUrl }) => (
 
 const PersonalInformation = ({ resumeData, fontSize }) => (
     <div className="flex flex-col justify-start items-start text-[#e2e2e2] p-5">
-        <div className="font-[600]" style={{ fontSize: `${fontSize * 1.5 / 14}rem` }}>{resumeData?.name}</div>
+        <div className="font-[600]" style={{ fontSize: `${fontSize * 1.5 / 14}rem` }}>{resumeData?.personalInfo.name}</div>
         <div className="mb-3" style={{ fontSize: `${fontSize * 0.9 / 14}rem` }}>{resumeData?.personalInfo?.jobTitle}</div>
 
         <div className="flex w-full gap-2">
@@ -59,7 +59,7 @@ const platformIcons = {
 };
 
 const Links = ({ resumeData, fontSize }) => (
-    <div className='flex flex-col items-start justify-center gap-2 text-[#e2e2e2]'>
+    <div className='flex flex-col items-start justify-center gap-2 text-[#e2e2e2] p-4'>
         {resumeData.profiles?.map(profile => (
             <a
                 key={profile.id}
@@ -91,9 +91,9 @@ const ProfessionalSummary = ({ summary, fontSize, fontColor }) => (
             SUMMARY
         </div>
         <div 
-            className="text-[#000000] mt-2 pb-2 text-justify" 
+            className="text-[#000000] mt-2 text-justify" 
             style={{ 
-                fontSize: `${(fontSize * 0.75) / 14}rem`
+                fontSize: `${(fontSize * 0.8) / 14}rem`
             }}
         >
             {summary && <div>{summary}</div>}
@@ -103,8 +103,8 @@ const ProfessionalSummary = ({ summary, fontSize, fontColor }) => (
 
 const PersonalInfoComponent = ({ resumeData, fontSize, fontColor }) => (
     <>
-        <div className="w-full flex gap-6" style={{ background: `${fontColor}` }}>
-            <ProfilePicture imageUrl={resumeData?.personalInfo?.imageUrl} />
+        <div className="w-full flex" style={{ background: `${fontColor}` }}>
+            <ProfilePicture imageUrl={resumeData?.personalInfo?.profilePicture} />
             <div className='flex justify-between w-[95%]'>
                 <PersonalInformation resumeData={resumeData} fontSize={fontSize} fontColor={fontColor} />
                 <Links resumeData={resumeData} fontSize={fontSize} />

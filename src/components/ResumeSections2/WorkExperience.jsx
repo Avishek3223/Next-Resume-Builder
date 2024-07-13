@@ -1,7 +1,7 @@
 import React from 'react';
 
 const WorkExperience = ({ workExperience, fontSize, fontColor }) => (
-    <div className="mt-6">
+    <div>
         <h2 className="font-bold mb-2" style={{ fontSize: `${fontSize * 0.89 / 14}rem`, color: fontColor }}>Work Experience</h2>
         {workExperience?.map((experience, index) => (
             <div key={index} className="mb-2">
@@ -13,7 +13,7 @@ const WorkExperience = ({ workExperience, fontSize, fontColor }) => (
                     <div className="text-gray-600" style={{ fontSize: `${fontSize * 0.8 / 14}rem` }}>{experience.startDate} - {experience.endDate}</div>
                 </div>
                 <div className="text-[#5c5c5c] mb-3" style={{ fontSize: `${fontSize * 0.8 / 14}rem` }}>{experience.jobTitle}</div>
-            <div className='text-black' style={{ fontSize: `${fontSize * 0.8 / 14}rem` }}>{experience.description}</div>
+            <div className='text-black text-justify' style={{ fontSize: `${fontSize * 0.8 / 14}rem` }}>{experience.description}</div>
             </div>
         ))}
     </div>
