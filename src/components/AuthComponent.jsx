@@ -134,7 +134,7 @@ const AuthComponent = ({ showLoginModal, handleCloseModal, isRegister, setIsRegi
             {isRegister ? (
               <p>Already have an account? <button type="button" onClick={handleToggleForm} className="font-[600]">Login</button></p>
             ) : (
-              <p>Don't have an account? <button type="button" onClick={handleToggleForm} className="font-[600]">Sign up</button></p>
+              <p>Don&apos;t have an account? <button type="button" onClick={handleToggleForm} className="font-[600]">Sign up</button></p>
             )}
           </div>
         </form>
