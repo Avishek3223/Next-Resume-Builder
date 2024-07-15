@@ -45,7 +45,7 @@ const ReviewedResume = () => {
           }
         `}
       </style>
-      <h2>Reviewed Resume</h2>
+      <h2 className='text-[1.5rem] font-[700]'>Reviewed Resume</h2>
       <div className="mt-8 mb-2 -ml-3 flex justify-between">
         <div className='flex flex-col items-center'>
           <div className='text-[1.2rem] font-[700]'>Current score</div>
