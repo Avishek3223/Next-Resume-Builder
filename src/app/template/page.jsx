@@ -8,10 +8,11 @@ import Resume from '@/components/Resume';
 import FontSettings from '@/components/FontSetting/FontSettings';
 import Resume2 from '@/components/Resume2';
 import { UserDataContext } from '@/context/UserDataContext';
+import Image from 'next/image';
 
 function Template() {
   const router = useRouter();
-  const {resumeData} = useContext(UserDataContext)
+  const { resumeData } = useContext(UserDataContext)
   const [userData, setUserData] = useState(null);
   const [fontSize, setFontSize] = useState(14);
   const [fontStyle, setFontStyle] = useState('normal');
@@ -66,12 +67,17 @@ function Template() {
   return (
     <div className='bg-[#eeeeee] h-auto'>
       {/* <button onClick={logOut}>Logout</button> */}
-        <div className='flex justify-between p-4 items-center bg-white'>
-          <div className='text-[1.2rem] font-[600]' aria-label={`Hi ${userData?.displayName.split(' ')[0]}`}>
-            👋Welcome! {userData?.displayName.split(' ')[0]}
-          </div>
-          <img className='w-11 h-11 rounded-full' src={userData?.photoURL} alt="User Avatar" />
+      <div className='flex justify-between p-4 items-center bg-white'>
+        <div className='text-[1.2rem] font-[600]' aria-label={`Hi ${userData?.displayName.split(' ')[0]}`}>
+          👋Welcome! {userData?.displayName.split(' ')[0]}
         </div>
+        <Image
+          className='w-11 h-11 rounded-full'
+          src={userData?.photoURL}
+          alt="User Avatar"
+          width={44} // Assuming w-11 equals 44px
+          height={44} // Assuming h-11 equals 44px
+        />        </div>
       <div className="flex">
         <UserInput />
         {template === 'Resume' ? (

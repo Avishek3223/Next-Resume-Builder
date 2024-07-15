@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FaUser } from 'react-icons/fa';
 import AWS from 'aws-sdk';
 import InputComponent from '../InputComponent';
+import Image from 'next/image';
 
 // Configure AWS SDK using environment variables
 const configureAWS = () => {
@@ -71,8 +72,13 @@ const PersonalInfoSection = ({ data, onChange }) => {
           style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', backdropFilter: 'blur(5px)' }}
         >
           {imagePreview ? (
-            <img src={imagePreview} alt="Profile Preview" className="w-24 h-24 object-cover rounded-full" />
-          ) : (
+            <Image
+              src={imagePreview}
+              alt="Profile Preview"
+              className="w-24 h-24 object-cover rounded-full"
+              width={96} // Assuming w-24 equals 96px
+              height={96} // Assuming h-24 equals 96px
+            />) : (
             <FaUser size="2rem" color="white" />
           )
           }

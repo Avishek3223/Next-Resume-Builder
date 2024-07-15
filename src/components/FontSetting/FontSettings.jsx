@@ -12,6 +12,7 @@ import '@fontsource/merriweather';
 import '@fontsource/noto-sans';
 import ResumeOne from '../../utils/ResumeOne.png';
 import ResumeTwo from '../../utils/ResumeTwo.png';
+import Image from 'next/image';
 
 const FontSettings = ({ fontSize, setFontSize, fontStyle, setFontStyle, fontColor, setTemplate, setFontColor, fontFamily, setFontFamily }) => {
     const handleFontSizeChange = (e) => {
@@ -85,11 +86,21 @@ const FontSettings = ({ fontSize, setFontSize, fontStyle, setFontStyle, fontColo
             <div className='mb-4 font-medium text-[1.2rem] mt-8'>Choose Template:</div>
             <div className='flex gap-6 justify-center'>
                 <button onClick={() => setTemplate("Resume")}>
-                    <img className='w-[12rem] border' src={ResumeOne.src} alt="Resume Template 1" />
-                </button>
+                    <Image
+                        className='w-[12rem] border'
+                        src={ResumeOne.src}
+                        alt="Resume Template 1"
+                        width={192} // Assuming 12rem equals 192px
+                        height={192} // Assuming a square aspect ratio
+                    />                </button>
                 <button onClick={() => setTemplate("Resume2")}>
-                    <img className='w-[12rem] border' src={ResumeTwo.src} alt="Resume Template 2" />
-                </button>
+                    <Image
+                        className='w-[12rem] border'
+                        src={ResumeTwo.src}
+                        alt="Resume Template 2"
+                        width={192}
+                        height={192}
+                    />                </button>
             </div>
         </div>
     );

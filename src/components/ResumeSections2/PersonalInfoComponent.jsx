@@ -1,10 +1,19 @@
+import Image from 'next/image';
 import React from 'react';
 
 const ProfilePicture = ({ imageUrl }) => (
     <>
         {imageUrl && (
             <div className=" w-[8rem] h-[8rem] p-1">
-                {imageUrl && <img src={imageUrl} alt="Profile" className="w-full h-full object-cover" />}
+                {imageUrl && (
+                    <Image
+                        src={imageUrl}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                        width={100}
+                        height={100}
+                    />
+                )}
             </div>
         )}
     </>
@@ -52,7 +61,7 @@ const platformIcons = {
     ),
     LinkedIn: (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.615c-.966 0-1.5-.634-1.5-1.385 0-.751.543-1.385 1.528-1.385s1.5.634 1.5 1.385c0 .751-.544 1.385-1.528 1.385zm13.5 12.615h-3v-5.5c0-1.381-.495-2.321-1.729-2.321-.943 0-1.505.627-1.754 1.233-.091.224-.114.534-.114.847v5.741h-3v-11h3v1.575c.381-.581 1.073-1.392 2.614-1.392 1.892 0 3.379 1.229 3.379 3.867v6.95z"/>
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.615c-.966 0-1.5-.634-1.5-1.385 0-.751.543-1.385 1.528-1.385s1.5.634 1.5 1.385c0 .751-.544 1.385-1.528 1.385zm13.5 12.615h-3v-5.5c0-1.381-.495-2.321-1.729-2.321-.943 0-1.505.627-1.754 1.233-.091.224-.114.534-.114.847v5.741h-3v-11h3v1.575c.381-.581 1.073-1.392 2.614-1.392 1.892 0 3.379 1.229 3.379 3.867v6.95z" />
         </svg>
     ),
     // Add other platform icons as needed
@@ -85,7 +94,7 @@ const ProfessionalSummary = ({ summary, fontSize }) => (
 const PersonalInfoComponent = ({ resumeData, fontSize }) => (
     <>
         <div className="w-full flex gap-6">
-        <ProfilePicture imageUrl={resumeData?.personalInfo?.profilePicture} />
+            <ProfilePicture imageUrl={resumeData?.personalInfo?.profilePicture} />
             <div className='flex justify-between w-[80%]'>
                 <PersonalInformation resumeData={resumeData} fontSize={fontSize} />
                 <Links resumeData={resumeData} fontSize={fontSize} />

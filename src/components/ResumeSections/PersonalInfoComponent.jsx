@@ -1,10 +1,19 @@
+import Image from 'next/image';
 import React from 'react';
 
 const ProfilePicture = ({ imageUrl }) => (
     <>
         {imageUrl && (
             <div className=" w-[9rem] h-[8.1rem] p-1">
-                {imageUrl && <img src={imageUrl} alt="Profile" className="w-full h-full object-cover" />}
+                {imageUrl && (
+                    <Image
+                        src={imageUrl}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                        width={100}
+                        height={100}
+                    />
+                )}
             </div>
         )}
     </>
@@ -78,9 +87,9 @@ const Links = ({ resumeData, fontSize }) => (
 
 const ProfessionalSummary = ({ summary, fontSize, fontColor }) => (
     <div>
-        <div 
+        <div
             className={`font-[700] mt-4 border-[${fontColor}]`}
-            style={{ 
+            style={{
                 fontSize: `${(fontSize * 0.95) / 14}rem`,
                 color: fontColor,
                 borderColor: fontColor,
@@ -90,9 +99,9 @@ const ProfessionalSummary = ({ summary, fontSize, fontColor }) => (
         >
             SUMMARY
         </div>
-        <div 
-            className="text-[#000000] mt-2 text-justify" 
-            style={{ 
+        <div
+            className="text-[#000000] mt-2 text-justify"
+            style={{
                 fontSize: `${(fontSize * 0.8) / 14}rem`
             }}
         >
