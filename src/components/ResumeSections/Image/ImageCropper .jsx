@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import Cropper from 'react-easy-crop';
 import { getCroppedImg } from './cropImage';
 
-const ImageCropper = ({ imageUrl, onCropComplete, onCancel }) => {
+const ImageCropper = ({ imageUrl, onCropComplete, onCropCancel }) => {
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
@@ -44,7 +44,7 @@ const ImageCropper = ({ imageUrl, onCropComplete, onCancel }) => {
                     />
                 </div>
                 <div className="relative flex w-full justify-center z-50 cursor-pointer">
-                    <button onClick={onCancel} className="mr-2 bg-gray-500 text-white px-5 w-full">Cancel</button>
+                    <button onClick={onCropCancel} className="mr-2 bg-gray-500 text-white px-5 w-full">Cancel</button>
                     <button onClick={onCropConfirm} className="bg-white py-2 w-full">Crop</button>
                 </div>
             </div>

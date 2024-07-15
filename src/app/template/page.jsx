@@ -19,8 +19,8 @@ function Template() {
   const [fontColor, setFontColor] = useState('#000000');
   const [fontFamily, setFontFamily] = useState('Noto Sans');
   const [isCropping, setIsCropping] = useState(false);
-  const image = resumeData?.personalInfo?.profilePicture
-  const [croppedImageUrl, setCroppedImageUrl] = useState(image);
+  // const image = resumeData?.personalInfo?.profilePicture
+  const [croppedImageUrl, setCroppedImageUrl] = useState(null);
   const [template, setTemplate] = useState("Resume");
 
   const logOut = async () => {

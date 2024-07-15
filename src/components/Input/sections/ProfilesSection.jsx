@@ -9,7 +9,7 @@ const ProfilesSection = ({ data, onAdd, onRemove, onChange }) => {
         <div className="flex flex-col gap-4">
             {data.map((entry, index) => (
                 <div key={index} className="">
-                    <div className="mb-2 w-[50%] border border-[gray]">
+                    <div className="mb-4 w-[50%] border border-[gray]">
                         <select
                             value={entry.platform}
                             onChange={(e) => onChange('profiles', index, 'platform', e.target.value)}

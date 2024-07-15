@@ -124,6 +124,7 @@ const UserInput = () => {
                 ...prevState,
                 [section]: newSectionData,
             }));
+            resumeDataFetch();
         } else {
             setSectionData((prevState) => ({
                 ...prevState,
@@ -132,6 +133,7 @@ const UserInput = () => {
                     [field]: value,
                 },
             }));
+            resumeDataFetch();
         }
     };
 
@@ -159,11 +161,11 @@ const UserInput = () => {
             const response = await axios.put(`${API_BASE_URL}/update-user/${userData.displayName}/${userData.emailId}`, updatedUserData);
 
             updateUserData(response.data);
-            resumeDataFetch();
         } catch (error) {
             console.error("Error updating user data:", error.response ? error.response.data : error.message);
         } finally {
             setLoading(false);
+            resumeDataFetch();
         }
     };
 

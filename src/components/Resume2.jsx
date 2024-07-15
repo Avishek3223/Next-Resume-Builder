@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { UserDataContext } from '@/context/UserDataContext';
 import PersonalInfoComponent from './ResumeSections2/PersonalInfoComponent';
 import WorkExperience from './ResumeSections2/WorkExperience';
@@ -20,10 +20,10 @@ import Patents from './ResumeSections2/Patents';
 import ArtisticEndeavors from './ResumeSections2/ArtisticEndeavors';
 import ControlButtons from './ResumeSections2/ControlButtons';
 import ImageCropper from './ResumeSections2/Image/ImageCropper ';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { toPng, toJpeg } from 'html-to-image';
+import './Marketing.css'
 
-const Resume2 = ({
+const Resume2 =  ({
     fontSize,
     fontStyle,
     fontColor,
@@ -38,6 +38,15 @@ const Resume2 = ({
     const [dragging, setDragging] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: -183 });
     const resumeRef = useRef(null);
+    const [imageLoaded, setImageLoaded] = useState(false);
+
+    useEffect(() => {
+        if (resumeData?.personalInfo?.profilePicture) {
+            const img = new Image();
+            img.src = resumeData.personalInfo.profilePicture;
+            img.onload = () => setImageLoaded(true);
+        }
+    }, [resumeData]);
 
     const zoomIn = () => {
         setScale((prevScale) => prevScale + 0.1);
@@ -75,27 +84,56 @@ const Resume2 = ({
         setIsCropping(false);
     };
 
-    const downloadPDF = () => {
-        const resumeContent = resumeRef.current.querySelector('.resume-content');
-        html2canvas(resumeContent, { scale: 2 }).then((canvas) => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF({
-                orientation: 'portrait', // or 'landscape'
-                unit: 'mm',
-                format: [210, 297] // A4 size in mm
-            });
-            const imgProps = pdf.getImageProperties(imgData);
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    const downloadImage = (format = 'png') => {
+        const resumeContent = resumeRef.current;
+        const svgElement = document.getElementById('exclude-from-capture');
+        const marginExclude = document.getElementById('resume-content');
 
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-            pdf.save('resume.pdf');
-        });
+        if (svgElement) {
+            svgElement.style.display = 'none';
+        }
+    
+        const options = {
+            quality: 1.0,
+            pixelRatio: 4, // Use a pixel ratio of 1 to avoid scaling
+            style: {
+                transform: 'scale(1)',
+                transformOrigin: 'top left',
+                width: '2480px', // Set the width to 210mm in pixels
+                height: '3508px',
+                margin: 0,
+            }
+        };
+    
+        const exportImage = format === 'jpeg' ? toJpeg : toPng;
+    
+        exportImage(resumeContent, options)
+            .then((dataUrl) => {
+                if (svgElement) {
+                    // Show the SVG element again
+                    svgElement.style.display = 'block';
+                }
+    
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = `resume.${format}`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            })
+            .catch((error) => {
+                if (svgElement) {
+                    // Show the SVG element again in case of an error
+                    svgElement.style.display = 'block';
+                }
+                console.error('Oops, something went wrong!', error);
+            });
     };
+    
+
 
     return (
-
-        <div className="h-[92vh] w-[60vw] overflow-x-visible overflow-y-hidden" ref={resumeRef} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
+        <div className="h-[92vh] w-[60vw] overflow-x-visible overflow-y-hidden" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
             <div
                 style={{
                     transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
@@ -106,7 +144,7 @@ const Resume2 = ({
                     fontFamily: fontFamily,
                     pointerEvents: isCropping ? 'none' : 'auto',
                 }}
-                className="w-[210mm] h-[297mm] m-auto mt-4 bg-white resume-content"
+                id='resume-content' className="w-[210mm] h-[297mm] m-auto mt-4 bg-white" ref={resumeRef}
                 onMouseDown={handleMouseDown}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" id="exclude-from-capture" className="absolute left-[6.4rem] top-3 w-6 h-5 cursor-pointer z-[100]" onClick={() => setIsCropping(true)}>
@@ -161,21 +199,21 @@ const Resume2 = ({
                     onCropCancel={handleCropCancel}
                 />
             )}
-            <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                viewBox="0 0 24 24" 
-                fill="currentColor" 
-                className="size-6 cursor-pointer absolute top-6" 
-                onClick={downloadPDF}
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="size-6 cursor-pointer absolute top-6"
+                onClick={() => downloadImage('png')} // You can change 'png' to 'jpeg' if needed
             >
-                <path 
-                    fillRule="evenodd" 
-                    d="M12 2.25a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V3a.75.75 0 0 1 .75-.75Zm-9 13.5a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z" 
-                    clipRule="evenodd" 
+                <path
+                    fillRule="evenodd"
+                    d="M12 2.25a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V3a.75.75 0 0 1 .75-.75Zm-9 13.5a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z"
+                    clipRule="evenodd"
                 />
             </svg>
-        </div>
 
+        </div>
     );
 };
 

@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FaUser } from 'react-icons/fa';
 import AWS from 'aws-sdk';
 import InputComponent from '../InputComponent';
 import Image from 'next/image';
+import { UserDataContext } from '@/context/UserDataContext';
+import { FadeLoader } from 'react-spinners';
 
 // Configure AWS SDK using environment variables
 const configureAWS = () => {
@@ -28,8 +30,11 @@ const configureAWS = () => {
 const s3 = configureAWS();
 
 const PersonalInfoSection = ({ data, onChange }) => {
-  const [imagePreview, setImagePreview] = useState("");
+  const [imagePreview, setImagePreview] = useState(data.profilePicture || "");
   const [previousImageKey, setPreviousImageKey] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { resumeDataFetch } = useContext(UserDataContext);
+
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file && s3) {
@@ -42,6 +47,7 @@ const PersonalInfoSection = ({ data, onChange }) => {
       };
 
       try {
+        setLoading(true);
         if (previousImageKey) {
           // Delete the previous image
           await s3.deleteObject({
@@ -53,35 +59,40 @@ const PersonalInfoSection = ({ data, onChange }) => {
         const { Location } = await s3.upload(params).promise();
         setImagePreview(Location);
         onChange('profilePicture', Location); // Update the profile picture URL
-        setPreviousImageKey(fileName); // Store the key of the uploaded image
+        setPreviousImageKey(fileName);
+        resumeDataFetch();
       } catch (error) {
         console.error('Error uploading file: ', error);
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   useEffect(() => {
-    setImagePreview(data.profilePicture)
-  }, [data])
+    setImagePreview(data.profilePicture);
+  }, [data.profilePicture]);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-8 items-center">
         <label
-          className="cursor-pointer flex text-black text-[1.2rem] rounded-full font-semibold flex-col justify-center items-center w-[6rem] h-[6rem] bg-[#adadad]"
+          className="cursor-pointer flex text-black text-[1.2rem] rounded-full font-semibold flex-col justify-center items-center w-[6.5rem] h-[6rem] bg-[#adadad] relative"
           style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', backdropFilter: 'blur(5px)' }}
         >
-          {imagePreview ? (
+          {loading ? (
+            <FadeLoader className='ml-3' color={"black"} width={4} height={13} radius={2}/>
+          ) : imagePreview ? (
             <Image
               src={imagePreview}
               alt="Profile Preview"
               className="w-24 h-24 object-cover rounded-full"
               width={96} // Assuming w-24 equals 96px
               height={96} // Assuming h-24 equals 96px
-            />) : (
+            />
+          ) : (
             <FaUser size="2rem" color="white" />
-          )
-          }
+          )}
           <input type="file" className="hidden" onChange={handleImageChange} />
         </label>
         <InputComponent label="Full Name *" value={data?.name} onChange={(e) => onChange('name', e.target.value)} />

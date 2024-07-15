@@ -157,7 +157,7 @@ const Resume = ({
                             ...resumeData,
                             personalInfo: {
                                 ...resumeData.personalInfo,
-                                profilePicture: croppedImageUrl
+                                profilePicture: croppedImageUrl || resumeData.personalInfo.profilePicture
                             }
                         }}
                         fontSize={fontSize}
