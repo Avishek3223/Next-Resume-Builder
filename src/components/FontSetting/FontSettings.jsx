@@ -90,8 +90,8 @@ const FontSettings = ({ fontSize, setFontSize, fontStyle, setFontStyle, fontColo
                         className='w-[12rem] border'
                         src={ResumeOne.src}
                         alt="Resume Template 1"
-                        width={192} // Assuming 12rem equals 192px
-                        height={192} // Assuming a square aspect ratio
+                        width={192}
+                        height={192} 
                     />                </button>
                 <button onClick={() => setTemplate("Resume2")}>
                     <Image
