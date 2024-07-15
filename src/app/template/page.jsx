@@ -1,22 +1,25 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import UserInput from '@/components/Input/UserInput';
 import { auth } from '@/components/firebaseApp';
 import { useRouter } from 'next/navigation';
 import Resume from '@/components/Resume';
 import FontSettings from '@/components/FontSetting/FontSettings';
 import Resume2 from '@/components/Resume2';
+import { UserDataContext } from '@/context/UserDataContext';
 
 function Template() {
   const router = useRouter();
+  const {resumeData} = useContext(UserDataContext)
   const [userData, setUserData] = useState(null);
   const [fontSize, setFontSize] = useState(14);
   const [fontStyle, setFontStyle] = useState('normal');
   const [fontColor, setFontColor] = useState('#000000');
   const [fontFamily, setFontFamily] = useState('Noto Sans');
   const [isCropping, setIsCropping] = useState(false);
-  const [croppedImageUrl, setCroppedImageUrl] = useState(null);
+  const image = resumeData?.personalInfo?.profilePicture
+  const [croppedImageUrl, setCroppedImageUrl] = useState(image);
   const [template, setTemplate] = useState("Resume");
 
   const logOut = async () => {

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { UserDataContext } from '@/context/UserDataContext';
 import PersonalInfoComponent from './ResumeSections/PersonalInfoComponent';
 import WorkExperience from './ResumeSections/WorkExperience';
@@ -19,7 +19,9 @@ import ProfessionalDevelopment from './ResumeSections/ProfessionalDevelopment';
 import Patents from './ResumeSections/Patents';
 import ArtisticEndeavors from './ResumeSections/ArtisticEndeavors';
 import ControlButtons from './ResumeSections/ControlButtons';
+import { toPng, toJpeg } from 'html-to-image';
 import ImageCropper from './ResumeSections/Image/ImageCropper ';
+import './Marketing.css'
 
 const Resume = ({
     fontSize,
@@ -36,6 +38,15 @@ const Resume = ({
     const [dragging, setDragging] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: -183 });
     const resumeRef = useRef(null);
+    const [imageLoaded, setImageLoaded] = useState(false);
+
+    useEffect(() => {
+        if (resumeData?.personalInfo?.profilePicture) {
+            const img = new Image();
+            img.src = resumeData.personalInfo.profilePicture;
+            img.onload = () => setImageLoaded(true);
+        }
+    }, [resumeData]);
 
     const zoomIn = () => {
         setScale((prevScale) => prevScale + 0.1);
@@ -73,8 +84,56 @@ const Resume = ({
         setIsCropping(false);
     };
 
+    const downloadImage = (format = 'png') => {
+        const resumeContent = resumeRef.current;
+        const svgElement = document.getElementById('exclude-from-capture');
+        const marginExclude = document.getElementById('resume-content');
+
+        if (svgElement) {
+            svgElement.style.display = 'none';
+        }
+    
+        const options = {
+            quality: 1.0,
+            pixelRatio: 4, // Use a pixel ratio of 1 to avoid scaling
+            style: {
+                transform: 'scale(1)',
+                transformOrigin: 'top left',
+                width: '2480px', // Set the width to 210mm in pixels
+                height: '3508px',
+                margin: 0,
+            }
+        };
+    
+        const exportImage = format === 'jpeg' ? toJpeg : toPng;
+    
+        exportImage(resumeContent, options)
+            .then((dataUrl) => {
+                if (svgElement) {
+                    // Show the SVG element again
+                    svgElement.style.display = 'block';
+                }
+    
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = `resume.${format}`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            })
+            .catch((error) => {
+                if (svgElement) {
+                    // Show the SVG element again in case of an error
+                    svgElement.style.display = 'block';
+                }
+                console.error('Oops, something went wrong!', error);
+            });
+    };
+    
+
+
     return (
-        <div className="h-[92vh] w-[60vw] overflow-x-visible overflow-y-hidden" ref={resumeRef} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
+        <div className="h-[92vh] w-[60vw] overflow-x-visible overflow-y-hidden" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
             <div
                 style={{
                     transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
@@ -85,10 +144,10 @@ const Resume = ({
                     fontFamily: fontFamily,
                     pointerEvents: isCropping ? 'none' : 'auto',
                 }}
-                className="w-[210mm] h-[297mm] m-auto mt-4 bg-white"
+                id='resume-content' className="w-[210mm] h-[297mm] m-auto mt-4 bg-white" ref={resumeRef}
                 onMouseDown={handleMouseDown}
             >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="absolute left-[6rem] top-4 w-6 h-5 cursor-pointer z-[100]" onClick={() => setIsCropping(true)}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" id="exclude-from-capture" className="absolute left-[6rem] top-4 w-6 h-5 cursor-pointer z-[100]" onClick={() => setIsCropping(true)}>
                     <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
                     <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
                 </svg>
@@ -98,7 +157,7 @@ const Resume = ({
                             ...resumeData,
                             personalInfo: {
                                 ...resumeData.personalInfo,
-                                profilePicture: croppedImageUrl || resumeData.personalInfo.profilePicture
+                                profilePicture: croppedImageUrl
                             }
                         }}
                         fontSize={fontSize}
@@ -125,14 +184,35 @@ const Resume = ({
                     {resumeData?.skills?.length > 0 && <SkillsAndInterests skills={resumeData.skills} fontSize={fontSize} fontColor={fontColor} />}
                 </div>
             </div>
-            <ControlButtons zoomIn={zoomIn} zoomOut={zoomOut} />
+            <ControlButtons
+                zoomIn={zoomIn}
+                zoomOut={zoomOut}
+                setScale={setScale}
+                handleCropComplete={handleCropComplete}
+                handleCropCancel={handleCropCancel}
+                isCropping={isCropping}
+            />
             {isCropping && (
                 <ImageCropper
                     imageUrl={resumeData?.personalInfo?.profilePicture}
                     onCropComplete={handleCropComplete}
-                    onCancel={handleCropCancel}
+                    onCropCancel={handleCropCancel}
                 />
             )}
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="size-6 cursor-pointer absolute top-6"
+                onClick={() => downloadImage('png')} // You can change 'png' to 'jpeg' if needed
+            >
+                <path
+                    fillRule="evenodd"
+                    d="M12 2.25a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V3a.75.75 0 0 1 .75-.75Zm-9 13.5a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z"
+                    clipRule="evenodd"
+                />
+            </svg>
+
         </div>
     );
 };
