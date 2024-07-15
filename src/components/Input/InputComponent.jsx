@@ -56,4 +56,6 @@ const InputComponent = memo(({ label, value, onChange, width }) => {
     );
 });
 
+InputComponent.displayName = 'InputComponent';
+
 export default InputComponent;
