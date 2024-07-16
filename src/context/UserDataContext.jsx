@@ -19,7 +19,6 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
     const [uploadStatus, setUploadStatus] = useState({ uploaded: false, fileUrl: null });
     const [uploading, setUploading] = useState(false);
     const [message, setMessage] = useState('');
-
     useEffect(() => {
         const getUserDataFromCache = async () => {
             try {
@@ -41,6 +40,7 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
     }, []);
 
     const [retrivedResumeReview, setRetrivedResumeReview] = useState({})
+
     const handleUploadResume = async (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -54,19 +54,18 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
                     const uploadResponse = await axios.post('https://ic1rqexx2c.execute-api.us-east-1.amazonaws.com/dev/upload/resume', {
                         fileName: file.name,
                         fileContent: base64Content,
+                        userName: userData.displayName, // include the userName
                     });
-
+    
                     setMessage('File uploaded successfully!');
-                    const uploadedFileUrl = `https://resume-reviewe.s3.amazonaws.com/${file.name}`;
-
                     // Directly retrieve the file after upload
                     try {
                         const retrieveResponse = await axios.get('https://ic1rqexx2c.execute-api.us-east-1.amazonaws.com/dev/get-uploaded/resume', {
                             params: {
-                                fileName: file.name,
+                                fileName: `${userData.displayName}/${file.name}`, // include the userName in the file path
                             },
                         });
-
+    
                         setMessage('File retrieved successfully!');
                         const fileUrl = retrieveResponse.data.fileUrl;
                         setUploadStatus({ uploaded: true, fileUrl: fileUrl });
@@ -96,7 +95,7 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
             };
         }
     };
-
+    
     const { data: resumeDataResponse, error: resumeDataError, mutate: resumeDataFetch } = useSWR(
         userData?.emailId ? `${API_BASE_URL}/get-user/${userData.emailId}` : null,
         fetcher,

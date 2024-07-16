@@ -31,7 +31,6 @@ const s3 = configureAWS();
 
 const PersonalInfoSection = ({ data, onChange }) => {
   const [imagePreview, setImagePreview] = useState(data.profilePicture || "");
-  const [previousImageKey, setPreviousImageKey] = useState(null);
   const [loading, setLoading] = useState(false);
   const { resumeDataFetch } = useContext(UserDataContext);
 
@@ -48,18 +47,35 @@ const PersonalInfoSection = ({ data, onChange }) => {
 
       try {
         setLoading(true);
-        if (previousImageKey) {
-          // Delete the previous image
-          await s3.deleteObject({
+
+        // List objects in the user's folder
+        const listParams = {
+          Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
+          Prefix: `${data.name}/`
+        };
+        const listedObjects = await s3.listObjectsV2(listParams).promise();
+
+        if (listedObjects.Contents.length > 0) {
+          // Prepare list of image objects to be deleted
+          const deleteParams = {
             Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
-            Key: previousImageKey,
-          }).promise();
+            Delete: { Objects: [] }
+          };
+
+          listedObjects.Contents.forEach(({ Key }) => {
+            if (Key.match(/\.(jpg|jpeg|png|gif)$/i)) {
+              deleteParams.Delete.Objects.push({ Key });
+            }
+          });
+
+          if (deleteParams.Delete.Objects.length > 0) {
+            await s3.deleteObjects(deleteParams).promise();
+          }
         }
 
         const { Location } = await s3.upload(params).promise();
         setImagePreview(Location);
         onChange('profilePicture', Location); // Update the profile picture URL
-        setPreviousImageKey(fileName);
         resumeDataFetch();
       } catch (error) {
         console.error('Error uploading file: ', error);
