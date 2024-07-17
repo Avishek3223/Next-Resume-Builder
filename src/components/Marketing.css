@@ -1,75 +1,100 @@
 @keyframes rainbow {
-    0% { background-position: 0% 50% }
-    50% { background-position: 100% 50% }
-    100% { background-position: 0% 50% }
+  0% {
+    background-position: 0% 50%
+  }
+
+  50% {
+    background-position: 100% 50%
+  }
+
+  100% {
+    background-position: 0% 50%
+  }
 }
 
 .rainbow-text-animation {
-    background: linear-gradient(90deg, #ff8080, #ffa366, #ffcc99, #99ff99, #99ccff, #cc99ff, #e6ccff);
-    background-size: 600% 100%;
-    animation: rainbow 8s linear infinite;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  background: linear-gradient(90deg, #ff8080, #ffa366, #ffcc99, #99ff99, #99ccff, #cc99ff, #e6ccff);
+  background-size: 600% 100%;
+  animation: rainbow 8s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .glow-shadow {
-    animation: glow 1.5s infinite alternate;
-  }
-  
-  @keyframes glow {
-    from {
-      box-shadow: none;
-    }
-    to {
-      box-shadow: 7px 7px 15px rgba(0, 195, 255, 0.7);
-    }
-  }
-  
-  .pdfViewer {
-    width: 100%; /* Adjust width as needed */
-    height: 100%; /* Adjust height as needed */
-    overflow: hidden; /* Hide scrollbar */
-    background-color: #fff; /* White background for the PDF */
-    padding: 1rem; /* Add padding */
-  }
-  
-  .hello {
-    overflow-y: scroll;
-    scrollbar-width: thin; /* Thin scrollbar (works on Firefox) */
-    scrollbar-color: #0f3f29 #effffe; /* Scrollbar track and thumb color */
-  }
-  
-  /* For WebKit (Chrome, Safari, Edge) */
-  .hello::-webkit-scrollbar {
-    width: 4px; /* Width of vertical scrollbar */
-  }
-  
-  .hello::-webkit-scrollbar-thumb {
-    background-color: #effffe; /* Color of the thumb */
-    border-radius: 0; /* No rounded corners */
-  }
-  
-  .hello::-webkit-scrollbar-track {
-    background-color: #0f3f3d; /* Color of the track */
-  }
-  
-  /* For Microsoft Edge (Chromium-based) */
-  @supports (-ms-ime-align: auto) {
-    .hello {
-      scrollbar-width: thin; /* Thin scrollbar (Chromium-based Edge) */
-    }
-  }
-  
-  .hello {
-    -ms-overflow-style: none !important;  /* IE and Edge */
-    scrollbar-width: none !important;  /* Firefox */
+  animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: none;
   }
 
-  .collapsible-section {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-out;
+  to {
+    box-shadow: 7px 7px 15px rgba(0, 195, 255, 0.7);
   }
-  .collapsible-section.expanded {
-    max-height: 500px; /* Adjust this value based on the content height */
+}
+
+.pdfViewer {
+  width: 100%;
+  /* Adjust width as needed */
+  height: 100%;
+  /* Adjust height as needed */
+  overflow: hidden;
+  /* Hide scrollbar */
+  background-color: #fff;
+  /* White background for the PDF */
+  padding: 1rem;
+  /* Add padding */
+}
+
+.hello {
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  /* Thin scrollbar (works on Firefox) */
+  scrollbar-color: #0f3f29 #effffe;
+  /* Scrollbar track and thumb color */
+}
+
+/* For WebKit (Chrome, Safari, Edge) */
+.hello::-webkit-scrollbar {
+  width: 4px;
+  /* Width of vertical scrollbar */
+}
+
+.hello::-webkit-scrollbar-thumb {
+  background-color: #effffe;
+  /* Color of the thumb */
+  border-radius: 0;
+  /* No rounded corners */
+}
+
+.hello::-webkit-scrollbar-track {
+  background-color: #0f3f3d;
+  /* Color of the track */
+}
+
+/* For Microsoft Edge (Chromium-based) */
+@supports (-ms-ime-align: auto) {
+  .hello {
+    scrollbar-width: thin;
+    /* Thin scrollbar (Chromium-based Edge) */
   }
+}
+
+.hello {
+  -ms-overflow-style: none !important;
+  /* IE and Edge */
+  scrollbar-width: none !important;
+  /* Firefox */
+}
+
+.collapsible-section {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
+}
+
+.collapsible-section.expanded {
+  max-height: 500px;
+  /* Adjust this value based on the content height */
+}

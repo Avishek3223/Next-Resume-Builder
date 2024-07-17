@@ -34,7 +34,7 @@ function UploadForm({ setUploadStatus }) {
             <GeneratingReview />
           </div>) : (
           <button
-            className='p-3 px-8 bg-white border-b-2 border-r-2 glow-shadow border-black w-[20vw] max1078:w-[80vw]'
+            className='p-3 px-8 text-[1.2rem] bg-white border-b-2 border-r-2 glow-shadow source font-[700] tracking-wide border-black w-[20vw] max1078:w-[80vw]'
             onClick={handleButtonClick}
             disabled={uploading}
           >

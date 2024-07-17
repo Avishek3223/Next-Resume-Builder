@@ -38,13 +38,23 @@ body {
   font-style: normal;
 }
 
-
 .source {
   font-family: "Source Code Pro", monospace;
   font-style: normal;
 }
 
-/* globals.css */
+.poppins {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.inter {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 @font-face {
   font-family: 'Bebas Neue';
   src: url(data:font/woff2;base64,...) format('woff2');
@@ -59,4 +69,16 @@ body {
   font-style: normal;
 }
 
-/* Add more @font-face rules as needed */
+@font-face {
+  font-family: 'Poppins';
+  src: url(data:font/woff2;base64,...) format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url(data:font/woff2;base64,...) format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}

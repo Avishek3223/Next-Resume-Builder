@@ -91,7 +91,7 @@ const AuthComponent = ({ showLoginModal, handleCloseModal, isRegister, setIsRegi
   };
 
   return (
-    <div className={showLoginModal ? "fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50" : "hidden"}>
+    <div className={showLoginModal ? "fixed poppins inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50" : "hidden"}>
       <div className="bg-white p-8 rounded-lg w-96" style={{ backdropFilter: 'blur(20px)' }}>
         <div className=' text-[1.2rem] font-[300] mb-1'>Welcome !</div>
         <h2 className="text-[1.5rem] font-[600]">{isRegister ? 'Sign up to' : 'Login to'}</h2>

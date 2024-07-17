@@ -205,4 +205,3 @@ const Resume2 =  ({
 };
 
 export default Resume2;
-

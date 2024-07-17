@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import AuthComponent from './AuthComponent';
 import { auth } from './firebaseApp';
+import './Marketing.css';
 
 function Navbar() {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -12,7 +13,6 @@ function Navbar() {
 
   const handleBuildResumeClick = () => {
     const user = auth.currentUser;
-    console.log(user)
     if (user) {
       router.push('/template');
     } else {
@@ -25,10 +25,12 @@ function Navbar() {
   };
 
   return (
-    <div className='flex justify-between items-center w-full p-5 bg-[#031525] border-b border-black'>
-      <div className='text-[2rem] jaro text-white max478:text-[6vw]'>Resume Builder</div>
+    <div className='source flex justify-between items-center w-full p-5 bg-[#031525] border-b border-black'>
+      <div className='text-[2rem] font-[900] tracking-tighter text-white max478:text-[6vw] bg-uneven'>
+        <span>Resume Builder</span>
+      </div>
       <button
-        className='text-[1.3rem] font-[500] border bg-[#fff8d7] border-black px-4 py-1 rounded-[6px] max478:text-[5vw]'
+        className='text-[1.3rem] font-[700] border bg-[#fff8d7] border-black px-4 py-1 rounded-[6px] max478:text-[5vw]'
         onClick={handleBuildResumeClick}
       >
         Build Resume
