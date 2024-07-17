@@ -1,13 +1,16 @@
-"use client"
+"use client";
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import './Marketing.css';
 import UserResume from './UserResume';
 import { UserDataContext } from '@/context/UserDataContext';
 
 function Marketing() {
   const { uploadStatus } = useContext(UserDataContext);
-  console.log(`running marketing.jsx when uploaded is ${uploadStatus.uploaded}`);
+
+  useEffect(() => {
+    console.log(`running marketing.jsx when uploaded is ${uploadStatus.uploaded}`);
+  }, [uploadStatus.uploaded]);
 
   if (uploadStatus.uploaded) {
     console.log('Rendering UserResume component');
@@ -17,7 +20,6 @@ function Marketing() {
       </div>
     );
   } else {
-    console.log('Rendering marketing section');
     return (
       <div className='w-[60%] max1078:w-[90vw]'>
         <section className='py-12 mt-[10rem] max1078:mt-0'>

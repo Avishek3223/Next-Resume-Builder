@@ -62,7 +62,7 @@ const AuthComponent = ({ showLoginModal, handleCloseModal, isRegister, setIsRegi
 
       const cache = await caches.open('user-data');
       await cache.put('user', new Response(JSON.stringify(userData)));
-
+      console.log(router)
       router.push('/template');
     } catch (error) {
       console.error('Error during Google sign-in:', error);
@@ -123,11 +123,11 @@ const AuthComponent = ({ showLoginModal, handleCloseModal, isRegister, setIsRegi
             <button type="submit" className="px-4 py-2 bg-black w-full text-white rounded-md">{isRegister ? 'Sign Up' : 'Login'}</button>
           </div>
           <button type="button" onClick={handleGoogleAuth} className="text-center w-full py-2 flex items-center gap-8 mt-4" style={{ boxShadow: '0 0px 10px rgba(0, 0, 0, 0.2)' }}>
-          <div className="ml-8"><GoogleLogo /></div>
+            <div className="ml-8"><GoogleLogo /></div>
             Sign in with Google
           </button>
           <button type="button" onClick={handleGitHubAuth} className="text-center w-full py-2 flex items-center gap-8 mt-4" style={{ boxShadow: '0 0px 10px rgba(0, 0, 0, 0.2)' }}>
-          <div className="ml-8"><GithubIcon /></div>
+            <div className="ml-8"><GithubIcon /></div>
             Sign in with GitHub
           </button>
           <div className='text-center mt-4'>

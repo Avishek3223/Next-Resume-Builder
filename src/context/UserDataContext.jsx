@@ -1,17 +1,15 @@
 "use client";
 
 import React, { createContext, useState, useEffect } from 'react';
-import useSWR from 'swr';
 import axios from 'axios';
 import { API_BASE_URL } from '@/config';
 import { auth } from '@/components/firebaseApp';
 import { useRouter } from 'next/navigation';
+import { onAuthStateChanged } from "firebase/auth";
 
 const logger = console;
 
 export const UserDataContext = createContext();
-
-const fetcher = url => axios.get(url).then(res => res.data);
 
 export const UserDataProvider = ({ children, initialUserData = null, initialResumeData = [] }) => {
     const [userData, setUserData] = useState(initialUserData);
@@ -19,52 +17,11 @@ export const UserDataProvider = ({ children, initialUserData = null, initialResu
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const router = useRouter();
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            setLoading(true);
-            try {
-                const resumeDataResponse = await axios.get(`${API_BASE_URL}/get-user/${initialUserData.data.emailId}`);
-                setUserData(initialUserData.data);
-                setResumeData(resumeDataResponse.data);
-            } catch (error) {
-                setError(error);
-                logger.error('Error fetching user data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (!initialUserData) {
-            fetchUserData();
-        }
-    }, [initialUserData]);
-
     const [userEmail, setUserEmail] = useState(null);
-    const [uploadStatus, setUploadStatus] = useState({ uploaded: false, fileUrl: null });
+    const [uploadStatus, setUploadStatus] = useState({ uploaded: false, fileUrl: '' });
     const [uploading, setUploading] = useState(false);
     const [message, setMessage] = useState('');
     const [retrievedResumeReview, setRetrievedResumeReview] = useState({});
-
-    useEffect(() => {
-        const getUserDataFromCache = async () => {
-            try {
-                const cache = await caches.open('user-data');
-                const cachedResponse = await cache.match('user');
-                if (cachedResponse) {
-                    const cachedUserData = await cachedResponse.json();
-                    logger.debug("Cached user data found:", cachedUserData);
-                    setUserData(cachedUserData);
-                } else {
-                    logger.debug("No cached user data found.");
-                }
-            } catch (error) {
-                logger.error('Error retrieving user data from cache:', error);
-            }
-        };
-
-        getUserDataFromCache();
-    }, []);
 
     const handleUploadResume = async (event) => {
         const file = event.target.files[0];
@@ -111,27 +68,43 @@ export const UserDataProvider = ({ children, initialUserData = null, initialResu
         }
     };
 
-    const { data: resumeDataResponse, error: resumeDataError, mutate: resumeDataFetch } = useSWR(
-        userData?.emailId ? `${API_BASE_URL}/get-user/${userData.emailId}` : null,
-        fetcher,
-        {
-            fallbackData: initialResumeData,
-            onLoadingSlow: () => setLoading(true),
-            onSuccess: () => setLoading(false),
-            onError: () => setLoading(false)
-        }
-    );
-
     useEffect(() => {
-        if (resumeDataResponse) {
-            console.log("Fetched resume data:", resumeDataResponse);
-            setResumeData(resumeDataResponse);
-        }
-        if (resumeDataError) {
-            logger.error("Error fetching resume data:", resumeDataError);
-            setError(resumeDataError);
-        }
-    }, [resumeDataResponse, resumeDataError]);
+        const fetchUserData = async (email) => {
+            setLoading(true);
+            try {
+                if (email) {
+                    setUserEmail(email);
+                    console.log("hello", email);
+                    // Fetch user data from API using Firebase email
+                    const userDataResponse = await axios.get(`${API_BASE_URL}/get-user/${email}`);
+                    setUserData(userDataResponse.data);
+                    // Fetch resume data if user data is available
+                    if (userDataResponse.data && userDataResponse.data.emailId) {
+                        const resumeDataResponse = await axios.get(`${API_BASE_URL}/get-user/${userDataResponse.data.emailId}`);
+                        setResumeData(resumeDataResponse.data);
+                    }
+                } else {
+                    logger.debug("No user currently logged in.");
+                }
+            } catch (error) {
+                setError(error);
+                logger.error('Error fetching user data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                fetchUserData(user.email);
+            } else {
+                setUserData(null);
+                setResumeData([]);
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     const createUser = async (name, emailId) => {
         try {
@@ -165,7 +138,7 @@ export const UserDataProvider = ({ children, initialUserData = null, initialResu
     };
 
     const logOut = async () => {
-        router.push('/')
+        router.push('/');
         try {
             await auth.signOut();
             setUserData(null);
@@ -178,11 +151,12 @@ export const UserDataProvider = ({ children, initialUserData = null, initialResu
             setError(error);
         }
     };
+
     return (
         <UserDataContext.Provider value={{
             userEmail, setUserEmail, userData, resumeData, createUser,
             updateUserData, handleUploadResume, message, uploading, uploadStatus,
-            resumeDataFetch, retrievedResumeReview, logOut
+            retrievedResumeReview, logOut
         }}>
             {children}
         </UserDataContext.Provider>
