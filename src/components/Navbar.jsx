@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import AuthComponent from './AuthComponent';
 import { auth } from './firebaseApp';
-import './Marketing.css';
 
 function Navbar() {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -26,7 +25,7 @@ function Navbar() {
 
   return (
     <div className='source flex justify-between items-center w-full p-5 bg-[#031525] border-b border-black'>
-      <div className='text-[2rem] font-[900] tracking-tighter text-white max478:text-[6vw] bg-uneven'>
+      <div className='text-[2rem] font-[900] tracking-tighter text-white max478:text-[6vw]'>
         <span>Resume Builder</span>
       </div>
       <button
