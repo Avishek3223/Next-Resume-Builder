@@ -29,7 +29,7 @@ function Template() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false); // Ensure the loading state is false after 2 seconds
-    }, 1000);
+    }, 2000);
     const getUserDataFromCache = async () => {
       try {
         const cache = await caches.open('user-data');
@@ -38,8 +38,7 @@ function Template() {
           const userData = await cachedResponse.json();
           setUserData(userData);
         } else {
-          // Fetch user data from your source (e.g., Firebase) here
-          // Assuming a function fetchUserData() that fetches user data
+
           const fetchedUserData = await fetchUserData();
           setUserData(fetchedUserData);
 
