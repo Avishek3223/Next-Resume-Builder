@@ -9,7 +9,7 @@ dotenv.config();
 export default function Home() {
   return (
     <RootLayout>
-      <div className='flex flex-col w-full h-screen'>
+      <div className='flex flex-col w-full h-screen bg-[#000000]'>
         <Navbar />
         <div className='w-full relative h-[90%] flex justify-around items-start m-auto bg-[#031525] max1078:flex-col max1078:justify-start max1078:items-center'>
               <Marketing />

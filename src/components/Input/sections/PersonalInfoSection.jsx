@@ -30,7 +30,7 @@ const configureAWS = () => {
 const s3 = configureAWS();
 
 const PersonalInfoSection = ({ data, onChange }) => {
-  const [imagePreview, setImagePreview] = useState(data.profilePicture || "");
+  const [imagePreview, setImagePreview] = useState(data?.profilePicture || "");
   const [loading, setLoading] = useState(false);
   const { resumeDataFetch } = useContext(UserDataContext);
 
@@ -86,8 +86,8 @@ const PersonalInfoSection = ({ data, onChange }) => {
   };
 
   useEffect(() => {
-    setImagePreview(data.profilePicture);
-  }, [data.profilePicture]);
+    setImagePreview(data?.profilePicture);
+  }, [data?.profilePicture]);
 
   return (
     <div className="flex flex-col gap-4">

@@ -133,7 +133,6 @@ const UserInput = () => {
                     [field]: value,
                 },
             }));
-            resumeDataFetch();
         }
     };
 

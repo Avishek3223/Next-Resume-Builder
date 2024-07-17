@@ -69,7 +69,7 @@ const platformIcons = {
 
 const Links = ({ resumeData, fontSize }) => (
     <div className='flex flex-col items-start justify-center gap-2 text-[#e2e2e2] p-4'>
-        {resumeData.profiles?.map(profile => (
+        {resumeData?.profiles?.map(profile => (
             <a
                 key={profile.id}
                 href={profile.link}

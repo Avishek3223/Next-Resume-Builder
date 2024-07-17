@@ -4,6 +4,8 @@ import React, { createContext, useState, useEffect } from 'react';
 import useSWR from 'swr';
 import axios from 'axios';
 import { API_BASE_URL } from '@/config';
+import { auth } from '@/components/firebaseApp';
+import { useRouter } from 'next/navigation';
 
 const logger = console;
 
@@ -11,14 +13,39 @@ export const UserDataContext = createContext();
 
 const fetcher = url => axios.get(url).then(res => res.data);
 
-export const UserDataProvider = ({ children, initialUserData, initialResumeData }) => {
+export const UserDataProvider = ({ children, initialUserData = null, initialResumeData = [] }) => {
     const [userData, setUserData] = useState(initialUserData);
     const [resumeData, setResumeData] = useState(initialResumeData);
-    const [loading, setLoading] = useState(!initialUserData);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const router = useRouter();
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            setLoading(true);
+            try {
+                const resumeDataResponse = await axios.get(`${API_BASE_URL}/get-user/${initialUserData.data.emailId}`);
+                setUserData(initialUserData.data);
+                setResumeData(resumeDataResponse.data);
+            } catch (error) {
+                setError(error);
+                logger.error('Error fetching user data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (!initialUserData) {
+            fetchUserData();
+        }
+    }, [initialUserData]);
+
+    const [userEmail, setUserEmail] = useState(null);
     const [uploadStatus, setUploadStatus] = useState({ uploaded: false, fileUrl: null });
     const [uploading, setUploading] = useState(false);
     const [message, setMessage] = useState('');
+    const [retrievedResumeReview, setRetrievedResumeReview] = useState({});
+
     useEffect(() => {
         const getUserDataFromCache = async () => {
             try {
@@ -39,8 +66,6 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
         getUserDataFromCache();
     }, []);
 
-    const [retrivedResumeReview, setRetrivedResumeReview] = useState({})
-
     const handleUploadResume = async (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -56,7 +81,7 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
                         fileContent: base64Content,
                         userName: userData.displayName, // include the userName
                     });
-    
+
                     setMessage('File uploaded successfully!');
                     // Directly retrieve the file after upload
                     try {
@@ -65,37 +90,27 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
                                 fileName: `${userData.displayName}/${file.name}`, // include the userName in the file path
                             },
                         });
-    
+
                         setMessage('File retrieved successfully!');
                         const fileUrl = retrieveResponse.data.fileUrl;
                         setUploadStatus({ uploaded: true, fileUrl: fileUrl });
-                        setRetrivedResumeReview(retrieveResponse.data.completions)
+                        setRetrievedResumeReview(retrieveResponse.data.completions);
                     } catch (retrieveError) {
                         console.error('Error retrieving file:', retrieveError);
                         setMessage('File retrieve failed. Please try again.');
-                        if (uploadStatus.uploaded) {
-                            setUploadStatus((prevStatus) => ({
-                                ...prevStatus,
-                                uploaded: false
-                            }));
-                        }
+                        setUploadStatus({ uploaded: false, fileUrl: null });
                     }
                 } catch (uploadError) {
                     console.error('Error uploading file:', uploadError);
                     setMessage('File upload failed. Please try again.');
-                    if (uploadStatus.uploaded) {
-                        setUploadStatus((prevStatus) => ({
-                            ...prevStatus,
-                            uploaded: false
-                        }));
-                    }
+                    setUploadStatus({ uploaded: false, fileUrl: null });
                 } finally {
                     setUploading(false);
                 }
             };
         }
     };
-    
+
     const { data: resumeDataResponse, error: resumeDataError, mutate: resumeDataFetch } = useSWR(
         userData?.emailId ? `${API_BASE_URL}/get-user/${userData.emailId}` : null,
         fetcher,
@@ -149,15 +164,27 @@ export const UserDataProvider = ({ children, initialUserData, initialResumeData 
         }
     };
 
+    const logOut = async () => {
+        router.push('/')
+        try {
+            await auth.signOut();
+            setUserData(null);
+            setResumeData([]);
+            const cache = await caches.open('user-data');
+            await cache.delete('user');
+            logger.debug("User signed out and cache cleared.");
+        } catch (error) {
+            logger.error('Error signing out:', error.message || error);
+            setError(error);
+        }
+    };
     return (
-        <UserDataContext.Provider value={{ userData, resumeData, createUser, updateUserData, handleUploadResume, message, uploading, uploadStatus, resumeDataFetch,retrivedResumeReview}}>
-            {loading ? (
-                <div>Loading...</div>
-            ) : error ? (
-                <div>Error: {error.message}</div>
-            ) : (
-                children
-            )}
+        <UserDataContext.Provider value={{
+            userEmail, setUserEmail, userData, resumeData, createUser,
+            updateUserData, handleUploadResume, message, uploading, uploadStatus,
+            resumeDataFetch, retrievedResumeReview, logOut
+        }}>
+            {children}
         </UserDataContext.Provider>
     );
 };
