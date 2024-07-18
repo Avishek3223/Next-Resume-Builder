@@ -13,7 +13,7 @@ const PositionsOfResponsibilitySection = ({ data, onAdd, onRemove, onChange }) =
                         onChange={(e) => onChange('positionsOfResponsibility', index, 'title', e.target.value)}
                     />
                     <textarea placeholder="Summary" className='h-[11rem] w-full text-[1rem] border border-[#929292] rounded-[6px] outline-none p-4'
-                        onChange={(e) => onChange('projects', index, 'description', e.target.value)}
+                        onChange={(e) => onChange('positionsOfResponsibility', index, 'description', e.target.value)}
                         value={entry.description}
                     />
                     <button

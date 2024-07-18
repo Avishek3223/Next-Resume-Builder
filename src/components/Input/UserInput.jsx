@@ -32,7 +32,7 @@ const UserInput = () => {
         profiles: false,
         workExperience: false,
         education: false,
-        projects: false,
+        academyProjects: false,
         positionsOfResponsibility: false,
         skills: false,
         certifications: false,
@@ -60,7 +60,7 @@ const UserInput = () => {
         profiles: [{ platform: '', username: "", link: '' }],
         workExperience: [{ company: '', region: '', startDate: '', endDate: '', position: '', description: '', technologies: '' }],
         education: [{ institution: '', course: '', degree: '', year: '' }],
-        projects: [{ title: '', description: '', link: '' }],
+        academyProjects: [{ title: '', description: '', link: '', startDate: '', endDate: '', technologies: [] }],
         positionsOfResponsibility: [{ title: '', description: '' }],
         skills: '',
         certifications: [{ name: '', issuer: '' }],
@@ -124,7 +124,6 @@ const UserInput = () => {
                 ...prevState,
                 [section]: newSectionData,
             }));
-            resumeDataFetch();
         } else {
             setSectionData((prevState) => ({
                 ...prevState,
@@ -210,11 +209,11 @@ const UserInput = () => {
                                         onChange={handleSectionDataChange}
                                     />
                                 )}
-                                {section === 'projects' && (
+                                {section === 'academyProjects' && (
                                     <ProjectsSection
                                         data={sectionData.academyProjects}
-                                        onAdd={() => handleAddEntry('projects')}
-                                        onRemove={handleRemoveEntry('projects')}
+                                        onAdd={() => handleAddEntry('academyProjects')}
+                                        onRemove={handleRemoveEntry('academyProjects')}
                                         onChange={handleSectionDataChange}
                                     />
                                 )}

@@ -68,32 +68,43 @@ export const UserDataProvider = ({ children, initialUserData = null, initialResu
         }
     };
 
-    useEffect(() => {
-        const fetchUserData = async (email) => {
-            setLoading(true);
-            try {
-                if (email) {
-                    setUserEmail(email);
-                    console.log("hello", email);
-                    // Fetch user data from API using Firebase email
-                    const userDataResponse = await axios.get(`${API_BASE_URL}/get-user/${email}`);
-                    setUserData(userDataResponse.data);
-                    // Fetch resume data if user data is available
-                    if (userDataResponse.data && userDataResponse.data.emailId) {
-                        const resumeDataResponse = await axios.get(`${API_BASE_URL}/get-user/${userDataResponse.data.emailId}`);
-                        setResumeData(resumeDataResponse.data);
-                    }
-                } else {
-                    logger.debug("No user currently logged in.");
+    const fetchUserData = async (email) => {
+        setLoading(true);
+        try {
+            if (email) {
+                setUserEmail(email);
+                console.log("hello", email);
+                // Fetch user data from API using Firebase email
+                const userDataResponse = await axios.get(`${API_BASE_URL}/get-user/${email}`);
+                setUserData(userDataResponse.data);
+                console.log(userDataResponse)
+                // Fetch resume data if user data is available
+                if (userDataResponse.data && userDataResponse.data.emailId) {
+                    const resumeDataResponse = await axios.get(`${API_BASE_URL}/get-user/${userDataResponse.data.emailId}`);
+                    setResumeData(resumeDataResponse.data);
                 }
-            } catch (error) {
-                setError(error);
-                logger.error('Error fetching user data:', error);
-            } finally {
-                setLoading(false);
+            } else {
+                logger.debug("No user currently logged in.");
             }
-        };
+        } catch (error) {
+            setError(error);
+            logger.error('Error fetching user data:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    const resumeDataFetch = async () => {
+        try {
+            const resumeDataResponse = await axios.get(`${API_BASE_URL}/get-user/${userData.emailId}`);
+            setResumeData(resumeDataResponse.data);
+            console.log(resumeDataResponse)
+        } catch (error) {
+            console.error('Error fetching resume data:', error);
+        }
+    };
+
+    useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 fetchUserData(user.email);
@@ -156,7 +167,7 @@ export const UserDataProvider = ({ children, initialUserData = null, initialResu
         <UserDataContext.Provider value={{
             userEmail, setUserEmail, userData, resumeData, createUser,
             updateUserData, handleUploadResume, message, uploading, uploadStatus,
-            retrievedResumeReview, logOut
+            retrievedResumeReview, logOut, resumeDataFetch
         }}>
             {children}
         </UserDataContext.Provider>
