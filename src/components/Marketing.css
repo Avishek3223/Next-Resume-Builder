@@ -126,3 +126,27 @@
 .fade-in {
   animation: fadeIn 1s ease-in-out;
 }
+
+.toast-container {
+  font-family: "Poppins", sans-serif;
+}
+
+.toast-success {
+  background-color: #28a745 !important; /* Green background for success */
+  color: white !important;
+}
+
+.toast-error {
+  background-color: rgb(255, 255, 255) !important; /* Red background for error */
+  color: rgb(0, 0, 0) !important;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.toast-error .Toastify__progress-bar {
+  background: rgb(4, 63, 112) !important; /* Darker red for error progress bar */
+}
+
+.toast-error .Toastify__toast-icon {
+  color: #270202 !important; /* Darker red for error icon */
+}
