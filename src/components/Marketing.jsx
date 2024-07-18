@@ -28,7 +28,7 @@ function Marketing() {
               Build Your Perfect Resume
             </h2>
             <p className="text-[1.5vw] text-[#c7c7c7] text-justify leading-relaxed max600:text-[5vw] max600:text-center source fade-in">
-              Craft an Impressive Resume that Captures Employers' Attention. Our easy-to-use builder guides you through the process, ensuring you highlight your skills and experience effectively. Upload your resume for free review.
+              Craft an Impressive Resume that Captures Employers&apos; Attention. Our easy-to-use builder guides you through the process, ensuring you highlight your skills and experience effectively. Upload your resume for free review.
             </p>
           </div>
         </section>
