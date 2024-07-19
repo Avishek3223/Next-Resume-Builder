@@ -2,7 +2,7 @@ import React from 'react';
 
 const AcademyProjects = ({ academyProjects, fontSize, fontColor }) => (
     <div className="mt-6">
-        <h2 className="font-bold mb-2" style={{ fontSize: `${fontSize * 0.89 / 14}rem`, color: fontColor }}>Academy Projects</h2>
+        <h2 className="font-bold mb-2" style={{ fontSize: `${fontSize * 0.89 / 14}rem`, color: fontColor }}>Projects</h2>
         {academyProjects?.map((project, index) => (
             <div key={index} className="mb-2">
                 <div className="items-center text-[#000000]" style={{ fontSize: `${fontSize * 1 / 14}rem` }}>

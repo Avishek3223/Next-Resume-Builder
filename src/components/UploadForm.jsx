@@ -7,8 +7,8 @@ import ReviewedResume from './ReviewedResume';
 import GeneratingReview from './GeneratingReview';
 import { getAuth } from "firebase/auth";
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import './Marketing.css';  // Import your custom styles
+import 'react-toastify/dist/ReactToastify.css';
 
 function UploadForm({ setUploadStatus }) {
   const fileInputRef = useRef(null);
@@ -19,7 +19,7 @@ function UploadForm({ setUploadStatus }) {
     if (user) {
       fileInputRef.current.click();
     } else {
-      toast.info("Please sign up to upload.", {
+      toast.error("Please sign up to upload.", {
         className: 'toast-error',
         bodyClassName: 'toast-container',
       });

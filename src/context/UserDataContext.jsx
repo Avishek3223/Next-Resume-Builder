@@ -21,10 +21,12 @@ export const UserDataProvider = ({ children, initialUserData = null, initialResu
     const [uploadStatus, setUploadStatus] = useState({ uploaded: false, fileUrl: '' });
     const [uploading, setUploading] = useState(false);
     const [message, setMessage] = useState('');
-    const [retrievedResumeReview, setRetrievedResumeReview] = useState({});
+    const [retrivedResumeReview, setretrivedResumeReview] = useState({});
+    console.log(userData)
 
     const handleUploadResume = async (event) => {
         const file = event.target.files[0];
+        const User = auth.currentUser;
         if (file) {
             setUploading(true);
             setMessage('');
@@ -36,7 +38,7 @@ export const UserDataProvider = ({ children, initialUserData = null, initialResu
                     const uploadResponse = await axios.post('https://ic1rqexx2c.execute-api.us-east-1.amazonaws.com/dev/upload/resume', {
                         fileName: file.name,
                         fileContent: base64Content,
-                        userName: userData.displayName, // include the userName
+                        userName: User.displayName, // include the userName
                     });
 
                     setMessage('File uploaded successfully!');
@@ -44,14 +46,19 @@ export const UserDataProvider = ({ children, initialUserData = null, initialResu
                     try {
                         const retrieveResponse = await axios.get('https://ic1rqexx2c.execute-api.us-east-1.amazonaws.com/dev/get-uploaded/resume', {
                             params: {
-                                fileName: `${userData.displayName}/${file.name}`, // include the userName in the file path
+                                fileName: `${User.displayName}/${file.name}`, // include the userName in the file path
                             },
                         });
-
+                        console.log('Retrieve Response:', retrieveResponse);
                         setMessage('File retrieved successfully!');
                         const fileUrl = retrieveResponse.data.fileUrl;
                         setUploadStatus({ uploaded: true, fileUrl: fileUrl });
-                        setRetrievedResumeReview(retrieveResponse.data.completions);
+                        if (retrieveResponse.data && retrieveResponse.data.completions) {
+                            setretrivedResumeReview(retrieveResponse.data.completions);
+                            console.log('Retrieved Resume Review:', retrieveResponse.data.completions);
+                        } else {
+                            console.warn('No completions data found in retrieve response.');
+                        }
                     } catch (retrieveError) {
                         console.error('Error retrieving file:', retrieveError);
                         setMessage('File retrieve failed. Please try again.');
@@ -129,14 +136,15 @@ export const UserDataProvider = ({ children, initialUserData = null, initialResu
     };
 
     const updateUserData = async (updatedAttributes) => {
+        const User = auth.currentUser;
         if (!userData?.name || !userData?.emailId) {
             logger.error('No user data available for updating.');
             return;
         }
 
         try {
-            logger.debug("Updating user data for:", userData.name, userData.emailId, "with attributes:", updatedAttributes);
-            const response = await axios.put(`${API_BASE_URL}/update-user/${userData.name}/${userData.emailId}`, updatedAttributes);
+            logger.debug("Updating user data for:", User.displayName, userData.emailId, "with attributes:", updatedAttributes);
+            const response = await axios.put(`${API_BASE_URL}/update-user/${User.displayName}/${userData.emailId}`, updatedAttributes);
             logger.debug("User data updated:", response.data);
             setUserData((prevState) => ({
                 ...prevState,
@@ -167,7 +175,7 @@ export const UserDataProvider = ({ children, initialUserData = null, initialResu
         <UserDataContext.Provider value={{
             userEmail, setUserEmail, userData, resumeData, createUser,
             updateUserData, handleUploadResume, message, uploading, uploadStatus,
-            retrievedResumeReview, logOut, resumeDataFetch
+            retrivedResumeReview, logOut, resumeDataFetch
         }}>
             {children}
         </UserDataContext.Provider>

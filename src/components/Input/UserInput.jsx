@@ -22,6 +22,7 @@ import EndeavorsSection from './sections/EndeavorsSection';
 import ProjectsSection from './sections/ProjectsSection';
 import './UserInput.css';
 import { API_BASE_URL } from '@/config';
+import { auth } from '../firebaseApp';
 
 const UserInput = () => {
     const { userData, updateUserData, resumeData, resumeDataFetch } = useContext(UserDataContext);
@@ -136,6 +137,7 @@ const UserInput = () => {
     };
 
     const handleSave = async (section) => {
+        const User = auth.currentUser
         setLoading(true);
         try {
             console.log(`Saving section: ${section}`);
@@ -156,7 +158,7 @@ const UserInput = () => {
                 updatedUserData[section] = { ...currentUserData[section], ...sectionData[section] };
             }
 
-            const response = await axios.put(`${API_BASE_URL}/update-user/${userData.displayName}/${userData.emailId}`, updatedUserData);
+            const response = await axios.put(`${API_BASE_URL}/update-user/${User.displayName}/${userData.emailId}`, updatedUserData);
 
             updateUserData(response.data);
         } catch (error) {

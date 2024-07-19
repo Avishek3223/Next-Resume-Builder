@@ -22,7 +22,7 @@ const ProfilePicture = ({ imageUrl }) => (
 
 const PersonalInformation = ({ resumeData, fontSize }) => (
     <div className="flex flex-col justify-center items-start">
-        <div className="font-[500]" style={{ fontSize: `${fontSize * 1.4 / 14}rem` }}>{resumeData?.name}</div>
+        <div className="font-[500]" style={{ fontSize: `${fontSize * 1.4 / 14}rem` }}>{resumeData?.personalInfo.name}</div>
         <div className="text-[#5c5c5c] mb-3" style={{ fontSize: `${fontSize * 0.8 / 14}rem` }}>{resumeData?.personalInfo?.jobTitle}</div>
 
         <div className="flex w-full gap-2">
