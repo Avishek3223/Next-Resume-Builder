@@ -76,7 +76,6 @@ const PersonalInfoSection = ({ data, onChange }) => {
         const { Location } = await s3.upload(params).promise();
         setImagePreview(Location);
         onChange('profilePicture', Location); // Update the profile picture URL
-        resumeDataFetch();
       } catch (error) {
         console.error('Error uploading file: ', error);
       } finally {
